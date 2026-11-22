@@ -1,0 +1,895 @@
+{
+ "game": "chainsaw-dance",
+ "name": "Chainsaw Dance",
+ "engine": "gamemaker-html5",
+ "generatedAt": "2026-11-22T14:48:50+00:00",
+ "description": "Fan-game ritmico ispirato a Chainsaw Man di Tatsuki Fujimoto. Selezioni un dancer, scegli un brano e segui le frecce sul dancepad.",
+ "controls": "Frecce / WASD sul dancepad · Invio per confermare · ESC pausa",
+ "bootDelayMs": 9000,
+ "notes": {
+  "reskin": "GameMaker compatta tutti gli sprite nelle texture atlas PNG. Per reskinare: sostituisci i pixel dentro benedance_texture_0/1.png mantenendo ESATTAMENTE le stesse posizioni/quote. Gli audio (OGG) si sostituiscono mantenendo stesso nome file e formato.",
+  "dancerCustom": "Il gioco supporta dancer esterni personalizzati (<nome>dancer_sprite.png + dancer_icon.png + dancer_score_icon.png): il CDN non li pubblica (404), sono opzionali."
+ },
+ "totals": {
+  "all": 41,
+  "audio": 39,
+  "image": 2
+ },
+ "screens": [
+  {
+   "id": "title",
+   "name": "Titolo · Press Enter",
+   "auto": true,
+   "steps": [],
+   "description": "Splash rosso di apertura, poi logo CHAINSAW DANCE con Kobeni e Chainsaw Man e la scritta PRESS ENTER. Arrivi qui automaticamente dopo il caricamento (o premi F5 nel browser)."
+  },
+  {
+   "id": "menu",
+   "name": "Menu principale (PLAY! / SETTINGS / SUPPORT / CREDITS)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500
+    }
+   ],
+   "description": "Menu arcade con dancepad a sinistra. Su PLAY! premi Invio. Naviga con frecce/WASD."
+  },
+  {
+   "id": "select",
+   "name": "Selezione dancer & brano",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 2500
+    }
+   ],
+   "description": "CHOOSE A DANCER (frecce sinistra/destra per cambiare dancer) + PICK A SONG! (frecce su/giù per scorrere i brani). A destra i pannelli difficoltà."
+  },
+  {
+   "id": "gameplay",
+   "name": "Gameplay (Bug Thief · Easy Vance)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 2200
+    }
+   ],
+   "description": "Partita avviata con dancer Kobeni e brano Bug Thief in difficoltà Easy Vance: frecce che scendono sul dancepad, barra salute in alto, countdown iniziale."
+  },
+  {
+   "id": "pause",
+   "name": "Pausa (RESUME / RESTART / MENU)",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "Premi ESC durante il gameplay per aprire il menu pausa: RESUME, RESTART, MENU."
+  },
+  {
+   "id": "settings",
+   "name": "Settings (tasti e modalità)",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "Dal menu principale seleziona SETTINGS: configurazione tasti key1/key2/key3, modalità practice/survive, automatizzazione dei set."
+  },
+  {
+   "id": "score",
+   "name": "Risultati / Score screen",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "Fine brano: schermata punteggio con conteggio tick, giudizi, applausi o fischi a seconda del risultato."
+  }
+ ],
+ "assets": [
+  {
+   "path": "html5game/KOBENI_SCORE.ogg",
+   "url": "/games/chainsaw-dance/html5game/KOBENI_SCORE.ogg",
+   "name": "KOBENI_SCORE.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 13311,
+   "screens": [
+    "score"
+   ],
+   "role": "music",
+   "note": "Musica schermata punteggio di Kobeni.",
+   "engine": false,
+   "durationSec": 1.2,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/SFX_Jump_11.ogg",
+   "url": "/games/chainsaw-dance/html5game/SFX_Jump_11.ogg",
+   "name": "SFX_Jump_11.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 4884,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "SFX salto/passi sul dancepad (4 varianti).",
+   "engine": false,
+   "durationSec": 1.0,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/SFX_Jump_17.ogg",
+   "url": "/games/chainsaw-dance/html5game/SFX_Jump_17.ogg",
+   "name": "SFX_Jump_17.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 5606,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "SFX salto/passi sul dancepad (4 varianti).",
+   "engine": false,
+   "durationSec": 0.3,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/SFX_Jump_22.ogg",
+   "url": "/games/chainsaw-dance/html5game/SFX_Jump_22.ogg",
+   "name": "SFX_Jump_22.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 4758,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "SFX salto/passi sul dancepad (4 varianti).",
+   "engine": false,
+   "durationSec": 0.17,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/SFX_Jump_24.ogg",
+   "url": "/games/chainsaw-dance/html5game/SFX_Jump_24.ogg",
+   "name": "SFX_Jump_24.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 6025,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "SFX salto/passi sul dancepad (4 varianti).",
+   "engine": false,
+   "durationSec": 0.37,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/benedance_texture_0.png",
+   "url": "/games/chainsaw-dance/html5game/benedance_texture_0.png",
+   "name": "benedance_texture_0.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1486041,
+   "screens": [
+    "title",
+    "menu",
+    "select",
+    "gameplay",
+    "score"
+   ],
+   "role": "atlas-texture",
+   "note": "Texture atlas GameMaker #0: contiene quasi tutti gli sprite 2D del gioco (artwork titolo, dancers, frecce, dancepad, UI). Per reskin: stessa griglia pixel, stesso PNG.",
+   "engine": false,
+   "width": 2048,
+   "height": 2048,
+   "reskin": "PNG stesso nome e stesse dimensioni (2048x2048)"
+  },
+  {
+   "path": "html5game/benedance_texture_1.png",
+   "url": "/games/chainsaw-dance/html5game/benedance_texture_1.png",
+   "name": "benedance_texture_1.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 811369,
+   "screens": [
+    "title",
+    "menu",
+    "select",
+    "gameplay",
+    "score"
+   ],
+   "role": "atlas-texture",
+   "note": "Texture atlas GameMaker #1: secondo set di sprite. Per reskin: stessa griglia pixel, stesso PNG.",
+   "engine": false,
+   "width": 2048,
+   "height": 2048,
+   "reskin": "PNG stesso nome e stesse dimensioni (2048x2048)"
+  },
+  {
+   "path": "html5game/chainsawvance.ogg",
+   "url": "/games/chainsaw-dance/html5game/chainsawvance.ogg",
+   "name": "chainsawvance.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 26747,
+   "screens": [
+    "select",
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Brano vance Chainsaw (loop di gioco).",
+   "engine": false,
+   "durationSec": 3.71,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/click_short1.ogg",
+   "url": "/games/chainsaw-dance/html5game/click_short1.ogg",
+   "name": "click_short1.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 9882,
+   "screens": [
+    "menu",
+    "select"
+   ],
+   "role": "sfx",
+   "note": "Click breve UI (navigazione menu).",
+   "engine": false,
+   "durationSec": 0.84,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/e_hit.ogg",
+   "url": "/games/chainsaw-dance/html5game/e_hit.ogg",
+   "name": "e_hit.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 5485,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Suono hit della nota.",
+   "engine": false,
+   "durationSec": 0.3,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/e_long_note.ogg",
+   "url": "/games/chainsaw-dance/html5game/e_long_note.ogg",
+   "name": "e_long_note.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 77562,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Suono nota lunga (hold).",
+   "engine": false,
+   "durationSec": 8.11,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/effect_goal.ogg",
+   "url": "/games/chainsaw-dance/html5game/effect_goal.ogg",
+   "name": "effect_goal.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 15837,
+   "screens": [],
+   "role": "audio",
+   "note": "",
+   "engine": false,
+   "durationSec": 1.04,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/final_result.ogg",
+   "url": "/games/chainsaw-dance/html5game/final_result.ogg",
+   "name": "final_result.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 17844,
+   "screens": [
+    "score"
+   ],
+   "role": "music",
+   "note": "Musica schermata risultato finale.",
+   "engine": false,
+   "durationSec": 3.3,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/game_over_applause.ogg",
+   "url": "/games/chainsaw-dance/html5game/game_over_applause.ogg",
+   "name": "game_over_applause.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 34363,
+   "screens": [
+    "score"
+   ],
+   "role": "sfx",
+   "note": "Applausi di game over / fine brano.",
+   "engine": false,
+   "durationSec": 3.83,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/game_start__1_.ogg",
+   "url": "/games/chainsaw-dance/html5game/game_start__1_.ogg",
+   "name": "game_start__1_.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 21490,
+   "screens": [
+    "menu"
+   ],
+   "role": "sfx",
+   "note": "Suono di start da menu.",
+   "engine": false,
+   "durationSec": 3.1,
+   "sampleRate": 22050,
+   "bitrateKbps": 50,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/s_one.ogg",
+   "url": "/games/chainsaw-dance/html5game/s_one.ogg",
+   "name": "s_one.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 1115968,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "SFX beat 'one' del metronomo di gioco.",
+   "engine": false,
+   "durationSec": 143.1,
+   "sampleRate": 44100,
+   "bitrateKbps": 60,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/s_sob.ogg",
+   "url": "/games/chainsaw-dance/html5game/s_sob.ogg",
+   "name": "s_sob.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 3579892,
+   "screens": [
+    "select"
+   ],
+   "role": "sfx",
+   "note": "SFX selection (pianto/sob dei dancer).",
+   "engine": false,
+   "durationSec": 171.08,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/score_bg_sound.ogg",
+   "url": "/games/chainsaw-dance/html5game/score_bg_sound.ogg",
+   "name": "score_bg_sound.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 522896,
+   "screens": [
+    "score"
+   ],
+   "role": "music",
+   "note": "Musica di fondo score screen.",
+   "engine": false,
+   "durationSec": 59.59,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/score_count.ogg",
+   "url": "/games/chainsaw-dance/html5game/score_count.ogg",
+   "name": "score_count.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 33186,
+   "screens": [
+    "score"
+   ],
+   "role": "sfx",
+   "note": "Tick di conteggio punteggio.",
+   "engine": false,
+   "durationSec": 3.66,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_ambient.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_ambient.ogg",
+   "name": "snd_ambient.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 90596,
+   "screens": [
+    "menu"
+   ],
+   "role": "music",
+   "note": "Musica ambient del menu arcade.",
+   "engine": false,
+   "durationSec": 22.01,
+   "sampleRate": 44100,
+   "bitrateKbps": 60,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_bad_result.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_bad_result.ogg",
+   "name": "snd_bad_result.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 16846,
+   "screens": [
+    "score"
+   ],
+   "role": "sfx",
+   "note": "Suono risultato negativo.",
+   "engine": false,
+   "durationSec": 1.9,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_bug_thif.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_bug_thif.ogg",
+   "name": "snd_bug_thif.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 3960204,
+   "screens": [
+    "select",
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Brano: Bug Thief (vance). Audio completo del livello.",
+   "engine": false,
+   "durationSec": 199.44,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_chain.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_chain.ogg",
+   "name": "snd_chain.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 28655,
+   "screens": [],
+   "role": "audio",
+   "note": "",
+   "engine": false,
+   "durationSec": 3.2,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_countdown.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_countdown.ogg",
+   "name": "snd_countdown.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 53920,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Countdown 3-2-1 pre-partita.",
+   "engine": false,
+   "durationSec": 6.45,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_dope.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_dope.ogg",
+   "name": "snd_dope.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 1822649,
+   "screens": [
+    "select",
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Brano: Dope (audio completo, Boys/Girls nella lista).",
+   "engine": false,
+   "durationSec": 107.21,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_fail.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_fail.ogg",
+   "name": "snd_fail.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 55851,
+   "screens": [
+    "score"
+   ],
+   "role": "sfx",
+   "note": "Suono fallimento.",
+   "engine": false,
+   "durationSec": 6.48,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_fnf_score_screen.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_fnf_score_screen.ogg",
+   "name": "snd_fnf_score_screen.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 622836,
+   "screens": [
+    "score"
+   ],
+   "role": "music",
+   "note": "Musica score screen in stile FNF (omaggio).",
+   "engine": false,
+   "durationSec": 77.84,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_fresh.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_fresh.ogg",
+   "name": "snd_fresh.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 1302396,
+   "screens": [
+    "select",
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Brano: Fresh (audio completo).",
+   "engine": false,
+   "durationSec": 82.04,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_garden.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_garden.ogg",
+   "name": "snd_garden.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 1025409,
+   "screens": [
+    "select",
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Brano: Garden Party (audio completo).",
+   "engine": false,
+   "durationSec": 54.54,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_good_refult.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_good_refult.ogg",
+   "name": "snd_good_refult.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 8471,
+   "screens": [
+    "score"
+   ],
+   "role": "sfx",
+   "note": "Suono risultato positivo.",
+   "engine": false,
+   "durationSec": 0.59,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_makima_loop.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_makima_loop.ogg",
+   "name": "snd_makima_loop.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 205154,
+   "screens": [
+    "select",
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Brano Makima — loop principale.",
+   "engine": false,
+   "durationSec": 27.09,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_makima_start.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_makima_start.ogg",
+   "name": "snd_makima_start.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 1205269,
+   "screens": [
+    "select",
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Brano Makima — parte intro.",
+   "engine": false,
+   "durationSec": 144.07,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_phut.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_phut.ogg",
+   "name": "snd_phut.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 3752045,
+   "screens": [
+    "select",
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Brano: Phut Hon (audio completo).",
+   "engine": false,
+   "durationSec": 207.02,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_result_hit.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_result_hit.ogg",
+   "name": "snd_result_hit.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 4802,
+   "screens": [
+    "score"
+   ],
+   "role": "sfx",
+   "note": "Hit sonoro dei risultati.",
+   "engine": false,
+   "durationSec": 0.18,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_score_prefect_tick.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_score_prefect_tick.ogg",
+   "name": "snd_score_prefect_tick.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 6005,
+   "screens": [
+    "score"
+   ],
+   "role": "sfx",
+   "note": "Tick punteggio perfetto.",
+   "engine": false,
+   "durationSec": 0.49,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_score_tick.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_score_tick.ogg",
+   "name": "snd_score_tick.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 6216,
+   "screens": [
+    "score"
+   ],
+   "role": "sfx",
+   "note": "Tick punteggio alternativo.",
+   "engine": false,
+   "durationSec": 0.41,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_stars.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_stars.ogg",
+   "name": "snd_stars.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 493483,
+   "screens": [
+    "select",
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Brano: Shooting Stars (audio completo).",
+   "engine": false,
+   "durationSec": 31.14,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_start.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_start.ogg",
+   "name": "snd_start.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 12230,
+   "screens": [
+    "menu"
+   ],
+   "role": "sfx",
+   "note": "Jingle di avvio del menu.",
+   "engine": false,
+   "durationSec": 1.4,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_thunder.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_thunder.ogg",
+   "name": "snd_thunder.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 41383,
+   "screens": [
+    "title"
+   ],
+   "role": "sfx",
+   "note": "Tuono dello splash iniziale.",
+   "engine": false,
+   "durationSec": 5.09,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_tokyo.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_tokyo.ogg",
+   "name": "snd_tokyo.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 3323097,
+   "screens": [
+    "select",
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Brano: Tokyo Drift (audio completo).",
+   "engine": false,
+   "durationSec": 172.04,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "html5game/snd_victory.ogg",
+   "url": "/games/chainsaw-dance/html5game/snd_victory.ogg",
+   "name": "snd_victory.ogg",
+   "type": "audio",
+   "format": "ogg",
+   "bytes": 32138,
+   "screens": [
+    "score"
+   ],
+   "role": "sfx",
+   "note": "Suono vittoria.",
+   "engine": false,
+   "durationSec": 4.0,
+   "sampleRate": 44100,
+   "bitrateKbps": 70,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  }
+ ]
+}

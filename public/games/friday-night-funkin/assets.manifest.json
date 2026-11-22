@@ -1,0 +1,5991 @@
+{
+ "game": "friday-night-funkin",
+ "name": "Friday Night Funkin'",
+ "engine": "openfl-html5",
+ "generatedAt": "2026-11-22T14:48:50+00:00",
+ "description": "Il gioco ritmo originale di Funkin' Crew (v0.3.0): battaglie musicali a settimane contro Daddy Dearest, Spooky Kids, Pico, Mommy Mearest, Monster, Senpai e Spirit.",
+ "controls": "Frecce per suonare · Invio per confermare · ESC indietro / pausa",
+ "bootDelayMs": 22000,
+ "notes": {
+  "reskin": "Gli sprite personaggi/oggetti usano atlas Sparrow v2: PNG + XML con frame name/x/y/w/h. Per reskinare: ridisegna i frame nel PNG mantenendo STESSO nome file, stesse dimensioni PNG e STESSO layout dei frame (coordinate nell'XML invariato). Il testo 'frames' nel manifest elenca nome e dimensione di ogni frame.",
+  "fonts": "I font woff (vcr, pixel) si sostituiscono mantenendo lo stesso nome file/famiglia.",
+  "charts": "I chart delle canzoni (assets/data/<song>/<song>.json) sono esclusi dal manifesto: sono dati di gioco, non asset creativi.",
+  "audio": "Inst.mp3 = strumentale, Voices.mp3 = voci: sostituendo uno dei due il gioco continua (no checksum), basta stesso nome/path e un mp3 valido."
+ },
+ "totals": {
+  "all": 276,
+  "text": 14,
+  "font": 4,
+  "audio": 85,
+  "image": 173
+ },
+ "screens": [
+  {
+   "id": "title",
+   "name": "Titolo (Girlfriend sugli speaker)",
+   "auto": true,
+   "steps": [],
+   "description": "Logo Friday Night Funkin' che 'pompa' + Girlfriend che balla e la scritta PRESS ENTER TO BEGIN. Arrivi qui automaticamente dopo il caricamento."
+  },
+  {
+   "id": "menu",
+   "name": "Menu principale (STORY MODE / FREEPLAY / DONATE)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500,
+     "expect": "MainMenuState"
+    }
+   ],
+   "description": "Menu giallo con Boyfriend. Naviga con frecce su/giù, conferma con Invio."
+  },
+  {
+   "id": "story",
+   "name": "Story Mode · selezione settimana",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500,
+     "expect": "MainMenuState"
+    },
+    {
+     "k": "Enter",
+     "delay": 4500,
+     "expect": "StoryMenuState"
+    }
+   ],
+   "description": "Selezione settimana (WEEK SCORE in alto, TRACKS a sinistra). Frecce sinistra/destra per cambiare settimana, su/giù per la difficoltà."
+  },
+  {
+   "id": "freeplay",
+   "name": "Freeplay (lista brani)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500,
+     "expect": "MainMenuState"
+    },
+    {
+     "k": "ArrowDown",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 4000,
+     "expect": "FreeplayState"
+    }
+   ],
+   "description": "Lista libera dei brani sbloccati con punteggio personale."
+  },
+  {
+   "id": "gameplay",
+   "name": "Gameplay (Week 1 · Bopeebo · NORMAL)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500,
+     "expect": "MainMenuState"
+    },
+    {
+     "k": "Enter",
+     "delay": 4500,
+     "expect": "StoryMenuState"
+    },
+    {
+     "k": "Enter",
+     "delay": 5000,
+     "expect": "PlayState"
+    }
+   ],
+   "description": "Partita avviata su Week 1 (Bopeebo, difficoltà NORMAL): note che salgono sulle frecce, barra salute, punteggio. Frecce per colpire le note."
+  },
+  {
+   "id": "week6",
+   "name": "Week 6 · selezione (settimana pixel)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500,
+     "expect": "MainMenuState"
+    },
+    {
+     "k": "Enter",
+     "delay": 4500,
+     "expect": "StoryMenuState"
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 4500,
+     "expect": "PlayState"
+    }
+   ],
+   "description": "Cinque frecce destra portano alla settimana 6 (SENPAI) in stile pixel. Alla conferma parte il dialogo dentro la partita: premi Invio per avanzare."
+  },
+  {
+   "id": "gameover",
+   "name": "Game Over (Blue Balls Anthem)",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "Perdi apposta durante una canzone (barra salute vuota): Boyfriend gira la testa e parte la musica di game over. Invio = riprova, ESC = menu."
+  },
+  {
+   "id": "pause",
+   "name": "Pausa (RESUME / RESTART / EXIT TO MENU)",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "ESC durante il gameplay apre la pausa con musica breakfast.mp3."
+  },
+  {
+   "id": "results",
+   "name": "Risultati fine settimana",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "Completando tutte le canzoni di una settimana: schermata 'Week Cleared' con punteggio."
+  }
+ ],
+ "assets": [
+  {
+   "path": "changelog.txt",
+   "url": "/games/friday-night-funkin/changelog.txt",
+   "name": "changelog.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 8068,
+   "screens": [
+    "menu"
+   ],
+   "role": "text",
+   "note": "Changelog della versione 0.3.0.",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "mods/modList.txt",
+   "url": "/games/friday-night-funkin/mods/modList.txt",
+   "name": "modList.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 8,
+   "screens": [
+    "title"
+   ],
+   "role": "text",
+   "note": "Mod introMod: testo intro custom (sistema Polymod).",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "mods/readme.txt",
+   "url": "/games/friday-night-funkin/mods/readme.txt",
+   "name": "readme.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 91,
+   "screens": [
+    "title"
+   ],
+   "role": "text",
+   "note": "Mod introMod: testo intro custom (sistema Polymod).",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "mods/introMod/_append/data/introText.txt",
+   "url": "/games/friday-night-funkin/mods/introMod/_append/data/introText.txt",
+   "name": "introText.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 20,
+   "screens": [
+    "title"
+   ],
+   "role": "text",
+   "note": "Mod introMod: testo intro custom (sistema Polymod).",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "flixel/fonts/monsterrat.woff",
+   "url": "/games/friday-night-funkin/flixel/fonts/monsterrat.woff",
+   "name": "monsterrat.woff",
+   "type": "font",
+   "format": "woff",
+   "bytes": 17484,
+   "screens": [
+    "menu"
+   ],
+   "role": "font",
+   "note": "Font engine HaxeFlixel (nokiafc22, monsterrat): usati da loghi/debug.",
+   "engine": true,
+   "reskin": "Stesso nome file e stessa famiglia font"
+  },
+  {
+   "path": "flixel/fonts/nokiafc22.woff",
+   "url": "/games/friday-night-funkin/flixel/fonts/nokiafc22.woff",
+   "name": "nokiafc22.woff",
+   "type": "font",
+   "format": "woff",
+   "bytes": 4772,
+   "screens": [
+    "menu"
+   ],
+   "role": "font",
+   "note": "Font engine HaxeFlixel (nokiafc22, monsterrat): usati da loghi/debug.",
+   "engine": true,
+   "reskin": "Stesso nome file e stessa famiglia font"
+  },
+  {
+   "path": "flixel/sounds/beep.mp3",
+   "url": "/games/friday-night-funkin/flixel/sounds/beep.mp3",
+   "name": "beep.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 2114,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "durationSec": 0.08,
+   "sampleRate": 44100,
+   "bitrateKbps": 127,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "flixel/sounds/flixel.mp3",
+   "url": "/games/friday-night-funkin/flixel/sounds/flixel.mp3",
+   "name": "flixel.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 39706,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "durationSec": 2.48,
+   "sampleRate": 44100,
+   "bitrateKbps": 128,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "flixel/images/logo/default.png",
+   "url": "/games/friday-night-funkin/flixel/images/logo/default.png",
+   "name": "default.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 3280,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 16,
+   "height": 16,
+   "reskin": "PNG stesso nome e stesse dimensioni (16x16)"
+  },
+  {
+   "path": "flixel/images/ui/button.png",
+   "url": "/games/friday-night-funkin/flixel/images/ui/button.png",
+   "name": "button.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 519,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 80,
+   "height": 60,
+   "reskin": "PNG stesso nome e stesse dimensioni (80x60)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/box.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/box.png",
+   "name": "box.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 912,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 16,
+   "height": 16,
+   "reskin": "PNG stesso nome e stesse dimensioni (16x16)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/button.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/button.png",
+   "name": "button.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 433,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 18,
+   "height": 54,
+   "reskin": "PNG stesso nome e stesse dimensioni (18x54)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/button_arrow_down.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/button_arrow_down.png",
+   "name": "button_arrow_down.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 446,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 18,
+   "height": 54,
+   "reskin": "PNG stesso nome e stesse dimensioni (18x54)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/button_arrow_left.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/button_arrow_left.png",
+   "name": "button_arrow_left.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 459,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 18,
+   "height": 54,
+   "reskin": "PNG stesso nome e stesse dimensioni (18x54)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/button_arrow_right.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/button_arrow_right.png",
+   "name": "button_arrow_right.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 511,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 18,
+   "height": 54,
+   "reskin": "PNG stesso nome e stesse dimensioni (18x54)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/button_arrow_up.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/button_arrow_up.png",
+   "name": "button_arrow_up.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 493,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 18,
+   "height": 54,
+   "reskin": "PNG stesso nome e stesse dimensioni (18x54)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/button_thin.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/button_thin.png",
+   "name": "button_thin.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 247,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 18,
+   "height": 54,
+   "reskin": "PNG stesso nome e stesse dimensioni (18x54)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/button_toggle.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/button_toggle.png",
+   "name": "button_toggle.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 534,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 18,
+   "height": 108,
+   "reskin": "PNG stesso nome e stesse dimensioni (18x108)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/check_box.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/check_box.png",
+   "name": "check_box.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 922,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 16,
+   "height": 16,
+   "reskin": "PNG stesso nome e stesse dimensioni (16x16)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/check_mark.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/check_mark.png",
+   "name": "check_mark.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 946,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 16,
+   "height": 16,
+   "reskin": "PNG stesso nome e stesse dimensioni (16x16)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/chrome.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/chrome.png",
+   "name": "chrome.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 253,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 18,
+   "height": 18,
+   "reskin": "PNG stesso nome e stesse dimensioni (18x18)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/chrome_flat.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/chrome_flat.png",
+   "name": "chrome_flat.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 212,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 12,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (12x12)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/chrome_inset.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/chrome_inset.png",
+   "name": "chrome_inset.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 192,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 12,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (12x12)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/chrome_light.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/chrome_light.png",
+   "name": "chrome_light.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 214,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 18,
+   "height": 18,
+   "reskin": "PNG stesso nome e stesse dimensioni (18x18)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/dropdown_mark.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/dropdown_mark.png",
+   "name": "dropdown_mark.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 156,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 10,
+   "height": 6,
+   "reskin": "PNG stesso nome e stesse dimensioni (10x6)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/finger_big.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/finger_big.png",
+   "name": "finger_big.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1724,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 32,
+   "height": 32,
+   "reskin": "PNG stesso nome e stesse dimensioni (32x32)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/finger_small.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/finger_small.png",
+   "name": "finger_small.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 294,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 16,
+   "height": 16,
+   "reskin": "PNG stesso nome e stesse dimensioni (16x16)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/hilight.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/hilight.png",
+   "name": "hilight.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 129,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 5,
+   "height": 5,
+   "reskin": "PNG stesso nome e stesse dimensioni (5x5)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/invis.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/invis.png",
+   "name": "invis.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 128,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 5,
+   "height": 5,
+   "reskin": "PNG stesso nome e stesse dimensioni (5x5)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/minus_mark.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/minus_mark.png",
+   "name": "minus_mark.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 136,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 6,
+   "height": 6,
+   "reskin": "PNG stesso nome e stesse dimensioni (6x6)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/plus_mark.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/plus_mark.png",
+   "name": "plus_mark.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 147,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 6,
+   "height": 6,
+   "reskin": "PNG stesso nome e stesse dimensioni (6x6)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/radio.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/radio.png",
+   "name": "radio.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 191,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 11,
+   "height": 11,
+   "reskin": "PNG stesso nome e stesse dimensioni (11x11)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/radio_dot.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/radio_dot.png",
+   "name": "radio_dot.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 153,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 11,
+   "height": 11,
+   "reskin": "PNG stesso nome e stesse dimensioni (11x11)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/swatch.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/swatch.png",
+   "name": "swatch.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 185,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 16,
+   "height": 16,
+   "reskin": "PNG stesso nome e stesse dimensioni (16x16)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/tab.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/tab.png",
+   "name": "tab.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 201,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 18,
+   "height": 18,
+   "reskin": "PNG stesso nome e stesse dimensioni (18x18)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/tab_back.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/tab_back.png",
+   "name": "tab_back.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 210,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 18,
+   "height": 18,
+   "reskin": "PNG stesso nome e stesse dimensioni (18x18)"
+  },
+  {
+   "path": "flixel/flixel-ui/img/tooltip_arrow.png",
+   "url": "/games/friday-night-funkin/flixel/flixel-ui/img/tooltip_arrow.png",
+   "name": "tooltip_arrow.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 18509,
+   "screens": [],
+   "role": "engine",
+   "note": "Asset di engine HaxeFlixel (logo, beep, UI debug).",
+   "engine": true,
+   "width": 60,
+   "height": 15,
+   "reskin": "PNG stesso nome e stesse dimensioni (60x15)"
+  },
+  {
+   "path": "assets/fonts/pixel.woff",
+   "url": "/games/friday-night-funkin/assets/fonts/pixel.woff",
+   "name": "pixel.woff",
+   "type": "font",
+   "format": "woff",
+   "bytes": 7156,
+   "screens": [
+    "menu",
+    "gameplay"
+   ],
+   "role": "font",
+   "note": "Font bitmap del gioco: 'VCR OSD Mono' (testi gioco) e 'Pixel Arial 11 Bold' (UI).",
+   "engine": false,
+   "reskin": "Stesso nome file e stessa famiglia font"
+  },
+  {
+   "path": "assets/fonts/vcr.woff",
+   "url": "/games/friday-night-funkin/assets/fonts/vcr.woff",
+   "name": "vcr.woff",
+   "type": "font",
+   "format": "woff",
+   "bytes": 25288,
+   "screens": [
+    "menu",
+    "gameplay"
+   ],
+   "role": "font",
+   "note": "Font bitmap del gioco: 'VCR OSD Mono' (testi gioco) e 'Pixel Arial 11 Bold' (UI).",
+   "engine": false,
+   "reskin": "Stesso nome file e stessa famiglia font"
+  },
+  {
+   "path": "assets/week6/images/weeb/animatedEvilSchool.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/animatedEvilSchool.png",
+   "name": "animatedEvilSchool.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 289191,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 4096,
+   "height": 4096,
+   "frames": {
+    "count": 40,
+    "animations": [
+     "background"
+    ],
+    "maxFrameWidth": 513,
+    "maxFrameHeight": 512,
+    "examples": [
+     "background 2 instance 10000",
+     "background 2 instance 10001",
+     "background 2 instance 10002",
+     "background 2 instance 10003",
+     "background 2 instance 10004",
+     "background 2 instance 10005",
+     "background 2 instance 10006",
+     "background 2 instance 10007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/animatedEvilSchool.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x4096), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/bfPixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/bfPixel.png",
+   "name": "bfPixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 34788,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 512,
+   "height": 512,
+   "frames": {
+    "count": 126,
+    "animations": [
+     "BF DOWN MISS instance",
+     "BF DOWN NOTE instance",
+     "BF IDLE instance",
+     "BF LEFT MISS instance",
+     "BF LEFT NOTE instance",
+     "BF RIGHT MISS instance",
+     "BF RIGHT NOTE instance",
+     "BF UP MISS instance",
+     "BF UP NOTE instance"
+    ],
+    "maxFrameWidth": 73,
+    "maxFrameHeight": 73,
+    "examples": [
+     "BF DOWN MISS instance 10000",
+     "BF DOWN MISS instance 10001",
+     "BF DOWN MISS instance 10002",
+     "BF DOWN MISS instance 10003",
+     "BF DOWN MISS instance 10004",
+     "BF DOWN MISS instance 10005",
+     "BF DOWN MISS instance 10006",
+     "BF DOWN MISS instance 10007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/bfPixel.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (512x512), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/bfPixelsDEAD.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/bfPixelsDEAD.png",
+   "name": "bfPixelsDEAD.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 120013,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 1024,
+   "height": 1024,
+   "frames": {
+    "count": 126,
+    "animations": [
+     "BF Dies pixel",
+     "RETRY CONFIRM",
+     "Retry Loop"
+    ],
+    "maxFrameWidth": 90,
+    "maxFrameHeight": 81,
+    "examples": [
+     "BF Dies pixel0000",
+     "BF Dies pixel0001",
+     "BF Dies pixel0002",
+     "BF Dies pixel0003",
+     "BF Dies pixel0004",
+     "BF Dies pixel0005",
+     "BF Dies pixel0006",
+     "BF Dies pixel0007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/bfPixelsDEAD.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (1024x1024), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/bfPortrait.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/bfPortrait.png",
+   "name": "bfPortrait.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 9778,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 512,
+   "height": 512,
+   "frames": {
+    "count": 9,
+    "animations": [
+     "Boyfriend portrait enter instance"
+    ],
+    "maxFrameWidth": 249,
+    "maxFrameHeight": 145,
+    "examples": [
+     "Boyfriend portrait enter instance 10000",
+     "Boyfriend portrait enter instance 10001",
+     "Boyfriend portrait enter instance 10002",
+     "Boyfriend portrait enter instance 10003",
+     "Boyfriend portrait enter instance 10004",
+     "Boyfriend portrait enter instance 10005",
+     "Boyfriend portrait enter instance 10006",
+     "Boyfriend portrait enter instance 10007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/bfPortrait.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (512x512), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/bgFreaks.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/bgFreaks.png",
+   "name": "bgFreaks.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 101100,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 1024,
+   "height": 1024,
+   "frames": {
+    "count": 60,
+    "animations": [
+     "BG fangirls dissuaded",
+     "BG girls group"
+    ],
+    "maxFrameWidth": 451,
+    "maxFrameHeight": 96,
+    "examples": [
+     "BG fangirls dissuaded0000",
+     "BG fangirls dissuaded0001",
+     "BG fangirls dissuaded0002",
+     "BG fangirls dissuaded0003",
+     "BG fangirls dissuaded0004",
+     "BG fangirls dissuaded0005",
+     "BG fangirls dissuaded0006",
+     "BG fangirls dissuaded0007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/bgFreaks.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (1024x1024), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/evilSchoolBG.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/evilSchoolBG.png",
+   "name": "evilSchoolBG.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 12567,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 311,
+   "height": 161,
+   "reskin": "PNG stesso nome e stesse dimensioni (311x161)"
+  },
+  {
+   "path": "assets/week6/images/weeb/evilSchoolFG.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/evilSchoolFG.png",
+   "name": "evilSchoolFG.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 6220,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 311,
+   "height": 161,
+   "reskin": "PNG stesso nome e stesse dimensioni (311x161)"
+  },
+  {
+   "path": "assets/week6/images/weeb/gfPixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/gfPixel.png",
+   "name": "gfPixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 23907,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 512,
+   "height": 512,
+   "frames": {
+    "count": 30,
+    "animations": [
+     "GF IDLE"
+    ],
+    "maxFrameWidth": 120,
+    "maxFrameHeight": 106,
+    "examples": [
+     "GF IDLE0000",
+     "GF IDLE0001",
+     "GF IDLE0002",
+     "GF IDLE0003",
+     "GF IDLE0004",
+     "GF IDLE0005",
+     "GF IDLE0006",
+     "GF IDLE0007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/gfPixel.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (512x512), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/petals.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/petals.png",
+   "name": "petals.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 18969,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 2048,
+   "height": 2048,
+   "frames": {
+    "count": 56,
+    "animations": [
+     "PETALS ALL"
+    ],
+    "maxFrameWidth": 311,
+    "maxFrameHeight": 161,
+    "examples": [
+     "PETALS ALL0000",
+     "PETALS ALL0001",
+     "PETALS ALL0002",
+     "PETALS ALL0003",
+     "PETALS ALL0004",
+     "PETALS ALL0005",
+     "PETALS ALL0006",
+     "PETALS ALL0007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/petals.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (2048x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/senpai.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/senpai.png",
+   "name": "senpai.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 91334,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 2048,
+   "height": 512,
+   "frames": {
+    "count": 154,
+    "animations": [
+     "Angry Senpai DOWN NOTE instance",
+     "Angry Senpai Idle instance",
+     "Angry Senpai LEFT NOTE instance",
+     "Angry Senpai RIGHT NOTE instance",
+     "Angry Senpai UP NOTE instance",
+     "SENPAI DOWN NOTE instance",
+     "SENPAI LEFT NOTE instance",
+     "SENPAI RIGHT NOTE instance",
+     "SENPAI UP NOTE instance",
+     "Senpai Idle instance"
+    ],
+    "maxFrameWidth": 125,
+    "maxFrameHeight": 164,
+    "examples": [
+     "Angry Senpai DOWN NOTE instance 10000",
+     "Angry Senpai DOWN NOTE instance 10001",
+     "Angry Senpai DOWN NOTE instance 10002",
+     "Angry Senpai DOWN NOTE instance 10003",
+     "Angry Senpai DOWN NOTE instance 10004",
+     "Angry Senpai DOWN NOTE instance 10005",
+     "Angry Senpai DOWN NOTE instance 10006",
+     "Angry Senpai DOWN NOTE instance 10007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/senpai.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (2048x512), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/senpaiCrazy.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/senpaiCrazy.png",
+   "name": "senpaiCrazy.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 14142,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 1024,
+   "height": 1024,
+   "frames": {
+    "count": 125,
+    "animations": [
+     "Senpai Pre Explosion instance"
+    ],
+    "maxFrameWidth": 234,
+    "maxFrameHeight": 168,
+    "examples": [
+     "Senpai Pre Explosion instance 10000",
+     "Senpai Pre Explosion instance 10001",
+     "Senpai Pre Explosion instance 10002",
+     "Senpai Pre Explosion instance 10003",
+     "Senpai Pre Explosion instance 10004",
+     "Senpai Pre Explosion instance 10005",
+     "Senpai Pre Explosion instance 10006",
+     "Senpai Pre Explosion instance 10007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/senpaiCrazy.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (1024x1024), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/senpaiPortrait.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/senpaiPortrait.png",
+   "name": "senpaiPortrait.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 14440,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 512,
+   "height": 512,
+   "frames": {
+    "count": 9,
+    "animations": [
+     "Senpai Portrait Enter instance"
+    ],
+    "maxFrameWidth": 249,
+    "maxFrameHeight": 145,
+    "examples": [
+     "Senpai Portrait Enter instance 10000",
+     "Senpai Portrait Enter instance 10001",
+     "Senpai Portrait Enter instance 10002",
+     "Senpai Portrait Enter instance 10003",
+     "Senpai Portrait Enter instance 10004",
+     "Senpai Portrait Enter instance 10005",
+     "Senpai Portrait Enter instance 10006",
+     "Senpai Portrait Enter instance 10007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/senpaiPortrait.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (512x512), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/spirit.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/spirit.png",
+   "name": "spirit.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 217054,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 1677,
+   "height": 1673,
+   "reskin": "PNG stesso nome e stesse dimensioni (1677x1673)"
+  },
+  {
+   "path": "assets/week6/images/weeb/spirit.txt",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/spirit.txt",
+   "name": "spirit.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 2972,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "assets/week6/images/weeb/spiritFaceForward.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/spiritFaceForward.png",
+   "name": "spiritFaceForward.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 2014,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 47,
+   "height": 106,
+   "reskin": "PNG stesso nome e stesse dimensioni (47x106)"
+  },
+  {
+   "path": "assets/week6/images/weeb/weebSchool.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/weebSchool.png",
+   "name": "weebSchool.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 4034,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 311,
+   "height": 161,
+   "reskin": "PNG stesso nome e stesse dimensioni (311x161)"
+  },
+  {
+   "path": "assets/week6/images/weeb/weebSky.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/weebSky.png",
+   "name": "weebSky.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 2714,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 311,
+   "height": 161,
+   "reskin": "PNG stesso nome e stesse dimensioni (311x161)"
+  },
+  {
+   "path": "assets/week6/images/weeb/weebStreet.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/weebStreet.png",
+   "name": "weebStreet.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 3885,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 311,
+   "height": 161,
+   "reskin": "PNG stesso nome e stesse dimensioni (311x161)"
+  },
+  {
+   "path": "assets/week6/images/weeb/weebTrees.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/weebTrees.png",
+   "name": "weebTrees.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 119590,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 3591,
+   "height": 1538,
+   "reskin": "PNG stesso nome e stesse dimensioni (3591x1538)"
+  },
+  {
+   "path": "assets/week6/images/weeb/weebTrees.txt",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/weebTrees.txt",
+   "name": "weebTrees.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 548,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "assets/week6/images/weeb/weebTreesBack.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/weebTreesBack.png",
+   "name": "weebTreesBack.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1465,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 311,
+   "height": 161,
+   "reskin": "PNG stesso nome e stesse dimensioni (311x161)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/arrowEnds.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/arrowEnds.png",
+   "name": "arrowEnds.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 357,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 28,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (28x12)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/arrows-pixels.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/arrows-pixels.png",
+   "name": "arrows-pixels.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 4806,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 68,
+   "height": 85,
+   "reskin": "PNG stesso nome e stesse dimensioni (68x85)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/bad-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/bad-pixel.png",
+   "name": "bad-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 418,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 28,
+   "height": 19,
+   "reskin": "PNG stesso nome e stesse dimensioni (28x19)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/combo-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/combo-pixel.png",
+   "name": "combo-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 417,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 47,
+   "height": 18,
+   "reskin": "PNG stesso nome e stesse dimensioni (47x18)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/date-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/date-pixel.png",
+   "name": "date-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1055,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 92,
+   "height": 37,
+   "reskin": "PNG stesso nome e stesse dimensioni (92x37)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/dialogueBox-evil.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/dialogueBox-evil.png",
+   "name": "dialogueBox-evil.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1425,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 512,
+   "height": 512,
+   "frames": {
+    "count": 12,
+    "animations": [
+     "Spirit Textbox spawn instance"
+    ],
+    "maxFrameWidth": 249,
+    "maxFrameHeight": 145,
+    "examples": [
+     "Spirit Textbox spawn instance 10000",
+     "Spirit Textbox spawn instance 10001",
+     "Spirit Textbox spawn instance 10002",
+     "Spirit Textbox spawn instance 10003",
+     "Spirit Textbox spawn instance 10004",
+     "Spirit Textbox spawn instance 10005",
+     "Spirit Textbox spawn instance 10006",
+     "Spirit Textbox spawn instance 10007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/pixelUI/dialogueBox-evil.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (512x512), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/dialogueBox-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/dialogueBox-pixel.png",
+   "name": "dialogueBox-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 7200,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 512,
+   "height": 512,
+   "frames": {
+    "count": 5,
+    "animations": [
+     "Text Box Appear instance"
+    ],
+    "maxFrameWidth": 249,
+    "maxFrameHeight": 144,
+    "examples": [
+     "Text Box Appear instance 10000",
+     "Text Box Appear instance 10001",
+     "Text Box Appear instance 10002",
+     "Text Box Appear instance 10003",
+     "Text Box Appear instance 10004"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/pixelUI/dialogueBox-pixel.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (512x512), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/dialogueBox-senpaiMad.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/dialogueBox-senpaiMad.png",
+   "name": "dialogueBox-senpaiMad.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 26689,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 512,
+   "height": 512,
+   "frames": {
+    "count": 8,
+    "animations": [
+     "SENPAI ANGRY IMPACT SPEECH instance"
+    ],
+    "maxFrameWidth": 249,
+    "maxFrameHeight": 144,
+    "examples": [
+     "SENPAI ANGRY IMPACT SPEECH instance 10000",
+     "SENPAI ANGRY IMPACT SPEECH instance 10001",
+     "SENPAI ANGRY IMPACT SPEECH instance 10002",
+     "SENPAI ANGRY IMPACT SPEECH instance 10003",
+     "SENPAI ANGRY IMPACT SPEECH instance 10004",
+     "SENPAI ANGRY IMPACT SPEECH instance 10005",
+     "SENPAI ANGRY IMPACT SPEECH instance 10006",
+     "SENPAI ANGRY IMPACT SPEECH instance 10007"
+    ]
+   },
+   "atlasXml": "assets/week6/images/weeb/pixelUI/dialogueBox-senpaiMad.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (512x512), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/good-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/good-pixel.png",
+   "name": "good-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 396,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 39,
+   "height": 16,
+   "reskin": "PNG stesso nome e stesse dimensioni (39x16)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/hand_textbox.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/hand_textbox.png",
+   "name": "hand_textbox.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 260,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 17,
+   "height": 11,
+   "reskin": "PNG stesso nome e stesse dimensioni (17x11)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/num0-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/num0-pixel.png",
+   "name": "num0-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 189,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 9,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (9x12)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/num1-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/num1-pixel.png",
+   "name": "num1-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 169,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 9,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (9x12)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/num2-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/num2-pixel.png",
+   "name": "num2-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 220,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 10,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (10x12)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/num3-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/num3-pixel.png",
+   "name": "num3-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 204,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 10,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (10x12)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/num4-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/num4-pixel.png",
+   "name": "num4-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 181,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 10,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (10x12)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/num5-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/num5-pixel.png",
+   "name": "num5-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 203,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 10,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (10x12)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/num6-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/num6-pixel.png",
+   "name": "num6-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 214,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 10,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (10x12)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/num7-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/num7-pixel.png",
+   "name": "num7-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 197,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 9,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (9x12)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/num8-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/num8-pixel.png",
+   "name": "num8-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 187,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 9,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (9x12)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/num9-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/num9-pixel.png",
+   "name": "num9-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 176,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 9,
+   "height": 12,
+   "reskin": "PNG stesso nome e stesse dimensioni (9x12)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/ready-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/ready-pixel.png",
+   "name": "ready-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1092,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 87,
+   "height": 41,
+   "reskin": "PNG stesso nome e stesse dimensioni (87x41)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/set-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/set-pixel.png",
+   "name": "set-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1068,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 80,
+   "height": 37,
+   "reskin": "PNG stesso nome e stesse dimensioni (80x37)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/shit-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/shit-pixel.png",
+   "name": "shit-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 628,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 35,
+   "height": 20,
+   "reskin": "PNG stesso nome e stesse dimensioni (35x20)"
+  },
+  {
+   "path": "assets/week6/images/weeb/pixelUI/sick-pixel.png",
+   "url": "/games/friday-night-funkin/assets/week6/images/weeb/pixelUI/sick-pixel.png",
+   "name": "sick-pixel.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 553,
+   "screens": [
+    "week6"
+   ],
+   "role": "sprite",
+   "note": "Week 6 (Senpai): grafica pixel-style, dialoghi, Spirit.",
+   "engine": false,
+   "width": 51,
+   "height": 20,
+   "reskin": "PNG stesso nome e stesse dimensioni (51x20)"
+  },
+  {
+   "path": "assets/week6/music/Lunchbox.mp3",
+   "url": "/games/friday-night-funkin/assets/week6/music/Lunchbox.mp3",
+   "name": "Lunchbox.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1181760,
+   "screens": [
+    "week6"
+   ],
+   "role": "music",
+   "note": "Musica dialoghi Week 6 (Lunchbox / LunchboxScary).",
+   "engine": false,
+   "durationSec": 29.54,
+   "sampleRate": 48000,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/week6/music/LunchboxScary.mp3",
+   "url": "/games/friday-night-funkin/assets/week6/music/LunchboxScary.mp3",
+   "name": "LunchboxScary.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 275451,
+   "screens": [
+    "week6"
+   ],
+   "role": "music",
+   "note": "Musica dialoghi Week 6 (Lunchbox / LunchboxScary).",
+   "engine": false,
+   "durationSec": 11.15,
+   "sampleRate": 44100,
+   "bitrateKbps": 197,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/week6/music/gameOver-pixel.mp3",
+   "url": "/games/friday-night-funkin/assets/week6/music/gameOver-pixel.mp3",
+   "name": "gameOver-pixel.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 3072000,
+   "screens": [
+    "week6"
+   ],
+   "role": "music",
+   "note": "Game Over in versione pixel (Week 6).",
+   "engine": false,
+   "durationSec": 76.8,
+   "sampleRate": 48000,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/week6/music/gameOverEnd-pixel.mp3",
+   "url": "/games/friday-night-funkin/assets/week6/music/gameOverEnd-pixel.mp3",
+   "name": "gameOverEnd-pixel.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 192000,
+   "screens": [],
+   "role": "audio",
+   "note": "",
+   "engine": false,
+   "durationSec": 4.8,
+   "sampleRate": 48000,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/philly/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/philly/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 4059427,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'philly': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 101.49,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/philly/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/philly/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 4059427,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'philly': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 101.49,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/cocoa/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/cocoa/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 4608000,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'cocoa': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 115.2,
+   "sampleRate": 48000,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/cocoa/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/cocoa/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 2304592,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'cocoa': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 115.23,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/pico/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/pico/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 3392782,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'pico': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 84.82,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/pico/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/pico/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1116460,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'pico': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 84.81,
+   "sampleRate": 44100,
+   "bitrateKbps": 105,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/satin-panties/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/satin-panties/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1920592,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'satin-panties': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 96.03,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/satin-panties/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/satin-panties/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1920592,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'satin-panties': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 96.03,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/dadbattle/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/dadbattle/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1583631,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'dadbattle': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 86.66,
+   "sampleRate": 44100,
+   "bitrateKbps": 146,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/dadbattle/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/dadbattle/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 3466970,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'dadbattle': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 86.67,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/senpai/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/senpai/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 2031048,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'senpai': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 98.29,
+   "sampleRate": 48000,
+   "bitrateKbps": 165,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/senpai/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/senpai/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1838304,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'senpai': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 98.32,
+   "sampleRate": 48000,
+   "bitrateKbps": 149,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/high/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/high/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 4224000,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'high': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 105.6,
+   "sampleRate": 48000,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/high/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/high/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 2112331,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'high': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 105.61,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/tutorial/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/tutorial/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1072499,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'tutorial': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 67.17,
+   "sampleRate": 44100,
+   "bitrateKbps": 127,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/south/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/south/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 3549517,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'south': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 88.74,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/south/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/south/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1136376,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'south': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 88.79,
+   "sampleRate": 44100,
+   "bitrateKbps": 102,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/bopeebo/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/bopeebo/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1507242,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'bopeebo': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 76.79,
+   "sampleRate": 44100,
+   "bitrateKbps": 156,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/bopeebo/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/bopeebo/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 758037,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'bopeebo': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 76.79,
+   "sampleRate": 44100,
+   "bitrateKbps": 78,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/blammed/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/blammed/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 4276766,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'blammed': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 106.92,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/blammed/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/blammed/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1320257,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'blammed': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 106.91,
+   "sampleRate": 44100,
+   "bitrateKbps": 98,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/thorns/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/thorns/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 4244160,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'thorns': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 106.1,
+   "sampleRate": 48000,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/thorns/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/thorns/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 4181760,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'thorns': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 104.54,
+   "sampleRate": 48000,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/roses/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/roses/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 2224344,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'roses': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 91.95,
+   "sampleRate": 48000,
+   "bitrateKbps": 193,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/roses/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/roses/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1263864,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'roses': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 91.95,
+   "sampleRate": 48000,
+   "bitrateKbps": 109,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/winter-horrorland/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/winter-horrorland/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 3282337,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'winter-horrorland': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 132.94,
+   "sampleRate": 44100,
+   "bitrateKbps": 197,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/winter-horrorland/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/winter-horrorland/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1876354,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'winter-horrorland': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 132.94,
+   "sampleRate": 44100,
+   "bitrateKbps": 112,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/test/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/test/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 4096320,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'test': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 102.41,
+   "sampleRate": 48000,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/test/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/test/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 408097,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'test': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 102.36,
+   "sampleRate": 44100,
+   "bitrateKbps": 31,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/spookeez/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/spookeez/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 2201383,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'spookeez': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 99.16,
+   "sampleRate": 44100,
+   "bitrateKbps": 177,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/spookeez/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/spookeez/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1177354,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'spookeez': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 99.17,
+   "sampleRate": 44100,
+   "bitrateKbps": 94,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/monster/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/monster/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 4003866,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'monster': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 177.76,
+   "sampleRate": 44100,
+   "bitrateKbps": 180,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/monster/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/monster/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 2136608,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'monster': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 177.76,
+   "sampleRate": 44100,
+   "bitrateKbps": 96,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/milf/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/milf/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 4987200,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'milf': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 124.68,
+   "sampleRate": 48000,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/milf/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/milf/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 2493719,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'milf': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 124.68,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/eggnog/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/eggnog/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 3760320,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'eggnog': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 94.01,
+   "sampleRate": 48000,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/eggnog/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/eggnog/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1880364,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'eggnog': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 94.01,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/fresh/Inst.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/fresh/Inst.mp3",
+   "name": "Inst.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1641082,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'fresh': traccia strumentale (Inst) caricata a inizio partita.",
+   "engine": false,
+   "durationSec": 82.05,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/songs/fresh/Voices.mp3",
+   "url": "/games/friday-night-funkin/assets/songs/fresh/Voices.mp3",
+   "name": "Voices.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1640560,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "music",
+   "note": "Canzone 'fresh': traccia vocale (Voices), sincronizzata all'Inst.",
+   "engine": false,
+   "durationSec": 82.02,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/week5/images/christmas/bfChristmas.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/bfChristmas.png",
+   "name": "bfChristmas.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 484746,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 4096,
+   "height": 2048,
+   "frames": {
+    "count": 295,
+    "animations": [
+     "BF HEY!!",
+     "BF NOTE DOWN",
+     "BF NOTE DOWN MISS",
+     "BF NOTE LEFT",
+     "BF NOTE LEFT MISS",
+     "BF NOTE RIGHT",
+     "BF NOTE RIGHT MISS",
+     "BF NOTE UP",
+     "BF NOTE UP MISS",
+     "BF idle dance"
+    ],
+    "maxFrameWidth": 414,
+    "maxFrameHeight": 447,
+    "examples": [
+     "BF HEY!!0000",
+     "BF HEY!!0001",
+     "BF HEY!!0002",
+     "BF HEY!!0003",
+     "BF HEY!!0004",
+     "BF HEY!!0005",
+     "BF HEY!!0006",
+     "BF HEY!!0007"
+    ]
+   },
+   "atlasXml": "assets/week5/images/christmas/bfChristmas.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week5/images/christmas/bgEscalator.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/bgEscalator.png",
+   "name": "bgEscalator.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 166108,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 3502,
+   "height": 1775,
+   "reskin": "PNG stesso nome e stesse dimensioni (3502x1775)"
+  },
+  {
+   "path": "assets/week5/images/christmas/bgWalls.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/bgWalls.png",
+   "name": "bgWalls.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 935132,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 3767,
+   "height": 1775,
+   "reskin": "PNG stesso nome e stesse dimensioni (3767x1775)"
+  },
+  {
+   "path": "assets/week5/images/christmas/bottomBop.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/bottomBop.png",
+   "name": "bottomBop.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1009627,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 4096,
+   "height": 2048,
+   "frames": {
+    "count": 14,
+    "animations": [
+     "Bottom Level Boppers"
+    ],
+    "maxFrameWidth": 1975,
+    "maxFrameHeight": 674,
+    "examples": [
+     "Bottom Level Boppers0000",
+     "Bottom Level Boppers0001",
+     "Bottom Level Boppers0002",
+     "Bottom Level Boppers0003",
+     "Bottom Level Boppers0004",
+     "Bottom Level Boppers0005",
+     "Bottom Level Boppers0006",
+     "Bottom Level Boppers0007"
+    ]
+   },
+   "atlasXml": "assets/week5/images/christmas/bottomBop.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week5/images/christmas/christmasTree.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/christmasTree.png",
+   "name": "christmasTree.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 69663,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 662,
+   "height": 1018,
+   "reskin": "PNG stesso nome e stesse dimensioni (662x1018)"
+  },
+  {
+   "path": "assets/week5/images/christmas/christmasWall.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/christmasWall.png",
+   "name": "christmasWall.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 840246,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 3576,
+   "height": 1676,
+   "reskin": "PNG stesso nome e stesse dimensioni (3576x1676)"
+  },
+  {
+   "path": "assets/week5/images/christmas/evilBG.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/evilBG.png",
+   "name": "evilBG.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1230014,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 2625,
+   "height": 1613,
+   "reskin": "PNG stesso nome e stesse dimensioni (2625x1613)"
+  },
+  {
+   "path": "assets/week5/images/christmas/evilSnow.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/evilSnow.png",
+   "name": "evilSnow.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 17859,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 2624,
+   "height": 262,
+   "reskin": "PNG stesso nome e stesse dimensioni (2624x262)"
+  },
+  {
+   "path": "assets/week5/images/christmas/evilTree.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/evilTree.png",
+   "name": "evilTree.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 115115,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 617,
+   "height": 1108,
+   "reskin": "PNG stesso nome e stesse dimensioni (617x1108)"
+  },
+  {
+   "path": "assets/week5/images/christmas/fgSnow.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/fgSnow.png",
+   "name": "fgSnow.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 10538,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 2984,
+   "height": 252,
+   "reskin": "PNG stesso nome e stesse dimensioni (2984x252)"
+  },
+  {
+   "path": "assets/week5/images/christmas/gfChristmas.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/gfChristmas.png",
+   "name": "gfChristmas.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 4845151,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 8192,
+   "height": 8192,
+   "frames": {
+    "count": 222,
+    "animations": [
+     "GF Cheer",
+     "GF Dancing Beat",
+     "GF Dancing Beat Hair Landing",
+     "GF Down Note",
+     "GF FEAR",
+     "GF Right Note",
+     "GF Up Note",
+     "GF left note",
+     "gf sad"
+    ],
+    "maxFrameWidth": 817,
+    "maxFrameHeight": 728,
+    "examples": [
+     "GF Cheer0000",
+     "GF Cheer0001",
+     "GF Cheer0002",
+     "GF Cheer0003",
+     "GF Cheer0004",
+     "GF Cheer0005",
+     "GF Cheer0006",
+     "GF Cheer0007"
+    ]
+   },
+   "atlasXml": "assets/week5/images/christmas/gfChristmas.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (8192x8192), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week5/images/christmas/mom_dad_christmas_assets.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/mom_dad_christmas_assets.png",
+   "name": "mom_dad_christmas_assets.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 5065188,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 8192,
+   "height": 8192,
+   "frames": {
+    "count": 134,
+    "animations": [
+     "Parent Christmas Idle",
+     "Parent Down Note Dad",
+     "Parent Down Note Mom",
+     "Parent Left Note Dad",
+     "Parent Left Note Mom",
+     "Parent Right Note Dad",
+     "Parent Right Note Mom",
+     "Parent Up Note Dad",
+     "Parent Up Note Mom"
+    ],
+    "maxFrameWidth": 952,
+    "maxFrameHeight": 811,
+    "examples": [
+     "Parent Christmas Idle0000",
+     "Parent Christmas Idle0001",
+     "Parent Christmas Idle0002",
+     "Parent Christmas Idle0003",
+     "Parent Christmas Idle0004",
+     "Parent Christmas Idle0005",
+     "Parent Christmas Idle0006",
+     "Parent Christmas Idle0007"
+    ]
+   },
+   "atlasXml": "assets/week5/images/christmas/mom_dad_christmas_assets.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (8192x8192), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week5/images/christmas/monsterChristmas.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/monsterChristmas.png",
+   "name": "monsterChristmas.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 872256,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 8192,
+   "height": 4096,
+   "frames": {
+    "count": 104,
+    "animations": [
+     "Monster Right note",
+     "Monster left note",
+     "monster down",
+     "monster idle",
+     "monster up note"
+    ],
+    "maxFrameWidth": 484,
+    "maxFrameHeight": 753,
+    "examples": [
+     "Monster Right note0000",
+     "Monster Right note0001",
+     "Monster Right note0002",
+     "Monster Right note0003",
+     "Monster Right note0004",
+     "Monster Right note0005",
+     "Monster Right note0006",
+     "Monster Right note0007"
+    ]
+   },
+   "atlasXml": "assets/week5/images/christmas/monsterChristmas.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (8192x4096), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week5/images/christmas/santa.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/santa.png",
+   "name": "santa.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1066130,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 4096,
+   "height": 2048,
+   "frames": {
+    "count": 14,
+    "animations": [
+     "santa idle in fear"
+    ],
+    "maxFrameWidth": 663,
+    "maxFrameHeight": 748,
+    "examples": [
+     "santa idle in fear0000",
+     "santa idle in fear0001",
+     "santa idle in fear0002",
+     "santa idle in fear0003",
+     "santa idle in fear0004",
+     "santa idle in fear0005",
+     "santa idle in fear0006",
+     "santa idle in fear0007"
+    ]
+   },
+   "atlasXml": "assets/week5/images/christmas/santa.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week5/images/christmas/upperBop.png",
+   "url": "/games/friday-night-funkin/assets/week5/images/christmas/upperBop.png",
+   "name": "upperBop.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 645807,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 5 (Christmas Monster): palco natalizio, BG cattivi, Santa.",
+   "engine": false,
+   "width": 4096,
+   "height": 2048,
+   "frames": {
+    "count": 13,
+    "animations": [
+     "Upper Crowd Bob"
+    ],
+    "maxFrameWidth": 2247,
+    "maxFrameHeight": 307,
+    "examples": [
+     "Upper Crowd Bob0000",
+     "Upper Crowd Bob0001",
+     "Upper Crowd Bob0002",
+     "Upper Crowd Bob0003",
+     "Upper Crowd Bob0004",
+     "Upper Crowd Bob0005",
+     "Upper Crowd Bob0006",
+     "Upper Crowd Bob0007"
+    ]
+   },
+   "atlasXml": "assets/week5/images/christmas/upperBop.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week3/images/Pico_FNF_assetss.png",
+   "url": "/games/friday-night-funkin/assets/week3/images/Pico_FNF_assetss.png",
+   "name": "Pico_FNF_assetss.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1750438,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Week 3 (Pico): Pico e stage Philadelphia (cielo, grattacieli, treno).",
+   "engine": false,
+   "width": 4096,
+   "height": 2048,
+   "frames": {
+    "count": 173,
+    "animations": [
+     "Pico Down Note",
+     "Pico Down Note MISS",
+     "Pico Idle Dance",
+     "Pico NOTE LEFT",
+     "Pico NOTE LEFT miss",
+     "Pico Note Right",
+     "Pico Note Right Miss",
+     "pico Up note",
+     "pico Up note miss"
+    ],
+    "maxFrameWidth": 723,
+    "maxFrameHeight": 530,
+    "examples": [
+     "Pico Down Note0000",
+     "Pico Down Note0001",
+     "Pico Down Note0002",
+     "Pico Down Note0003",
+     "Pico Down Note0004",
+     "Pico Down Note0005",
+     "Pico Down Note0006",
+     "Pico Down Note0007"
+    ]
+   },
+   "atlasXml": "assets/week3/images/Pico_FNF_assetss.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week3/images/philly/behindTrain.png",
+   "url": "/games/friday-night-funkin/assets/week3/images/philly/behindTrain.png",
+   "name": "behindTrain.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 51391,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Week 3 (Pico): Pico e stage Philadelphia (cielo, grattacieli, treno).",
+   "engine": false,
+   "width": 1729,
+   "height": 955,
+   "reskin": "PNG stesso nome e stesse dimensioni (1729x955)"
+  },
+  {
+   "path": "assets/week3/images/philly/city.png",
+   "url": "/games/friday-night-funkin/assets/week3/images/philly/city.png",
+   "name": "city.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 167048,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Week 3 (Pico): Pico e stage Philadelphia (cielo, grattacieli, treno).",
+   "engine": false,
+   "width": 1729,
+   "height": 955,
+   "reskin": "PNG stesso nome e stesse dimensioni (1729x955)"
+  },
+  {
+   "path": "assets/week3/images/philly/sky.png",
+   "url": "/games/friday-night-funkin/assets/week3/images/philly/sky.png",
+   "name": "sky.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 438577,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Week 3 (Pico): Pico e stage Philadelphia (cielo, grattacieli, treno).",
+   "engine": false,
+   "width": 1729,
+   "height": 955,
+   "reskin": "PNG stesso nome e stesse dimensioni (1729x955)"
+  },
+  {
+   "path": "assets/week3/images/philly/street.png",
+   "url": "/games/friday-night-funkin/assets/week3/images/philly/street.png",
+   "name": "street.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 146849,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Week 3 (Pico): Pico e stage Philadelphia (cielo, grattacieli, treno).",
+   "engine": false,
+   "width": 1729,
+   "height": 955,
+   "reskin": "PNG stesso nome e stesse dimensioni (1729x955)"
+  },
+  {
+   "path": "assets/week3/images/philly/train.png",
+   "url": "/games/friday-night-funkin/assets/week3/images/philly/train.png",
+   "name": "train.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 186831,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Week 3 (Pico): Pico e stage Philadelphia (cielo, grattacieli, treno).",
+   "engine": false,
+   "width": 4096,
+   "height": 512,
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x512)"
+  },
+  {
+   "path": "assets/week3/images/philly/win0.png",
+   "url": "/games/friday-night-funkin/assets/week3/images/philly/win0.png",
+   "name": "win0.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 30819,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Week 3 (Pico): Pico e stage Philadelphia (cielo, grattacieli, treno).",
+   "engine": false,
+   "width": 1729,
+   "height": 955,
+   "reskin": "PNG stesso nome e stesse dimensioni (1729x955)"
+  },
+  {
+   "path": "assets/week3/images/philly/win1.png",
+   "url": "/games/friday-night-funkin/assets/week3/images/philly/win1.png",
+   "name": "win1.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 30568,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Week 3 (Pico): Pico e stage Philadelphia (cielo, grattacieli, treno).",
+   "engine": false,
+   "width": 1729,
+   "height": 955,
+   "reskin": "PNG stesso nome e stesse dimensioni (1729x955)"
+  },
+  {
+   "path": "assets/week3/images/philly/win2.png",
+   "url": "/games/friday-night-funkin/assets/week3/images/philly/win2.png",
+   "name": "win2.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 31185,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Week 3 (Pico): Pico e stage Philadelphia (cielo, grattacieli, treno).",
+   "engine": false,
+   "width": 1729,
+   "height": 955,
+   "reskin": "PNG stesso nome e stesse dimensioni (1729x955)"
+  },
+  {
+   "path": "assets/week3/images/philly/win3.png",
+   "url": "/games/friday-night-funkin/assets/week3/images/philly/win3.png",
+   "name": "win3.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 30319,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Week 3 (Pico): Pico e stage Philadelphia (cielo, grattacieli, treno).",
+   "engine": false,
+   "width": 1729,
+   "height": 955,
+   "reskin": "PNG stesso nome e stesse dimensioni (1729x955)"
+  },
+  {
+   "path": "assets/week3/images/philly/win4.png",
+   "url": "/games/friday-night-funkin/assets/week3/images/philly/win4.png",
+   "name": "win4.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 31128,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Week 3 (Pico): Pico e stage Philadelphia (cielo, grattacieli, treno).",
+   "engine": false,
+   "width": 1729,
+   "height": 955,
+   "reskin": "PNG stesso nome e stesse dimensioni (1729x955)"
+  },
+  {
+   "path": "assets/week2/images/Monster_Assets.png",
+   "url": "/games/friday-night-funkin/assets/week2/images/Monster_Assets.png",
+   "name": "Monster_Assets.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1570346,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 2 (Spooky Kids): Skid & Pump, sfondo halloween.",
+   "engine": false,
+   "width": 4096,
+   "height": 4096,
+   "frames": {
+    "count": 104,
+    "animations": [
+     "Monster Right note",
+     "Monster left note",
+     "monster down",
+     "monster idle",
+     "monster up note"
+    ],
+    "maxFrameWidth": 484,
+    "maxFrameHeight": 714,
+    "examples": [
+     "Monster Right note0000",
+     "Monster Right note0001",
+     "Monster Right note0002",
+     "Monster Right note0003",
+     "Monster Right note0004",
+     "Monster Right note0005",
+     "Monster Right note0006",
+     "Monster Right note0007"
+    ]
+   },
+   "atlasXml": "assets/week2/images/Monster_Assets.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x4096), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week2/images/halloween_bg.png",
+   "url": "/games/friday-night-funkin/assets/week2/images/halloween_bg.png",
+   "name": "halloween_bg.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 5482377,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 2 (Spooky Kids): Skid & Pump, sfondo halloween.",
+   "engine": false,
+   "width": 8192,
+   "height": 8192,
+   "frames": {
+    "count": 23,
+    "animations": [
+     "halloweem bg",
+     "halloweem bg lightning strike"
+    ],
+    "maxFrameWidth": 2114,
+    "maxFrameHeight": 1090,
+    "examples": [
+     "halloweem bg0000",
+     "halloweem bg lightning strike0000",
+     "halloweem bg lightning strike0001",
+     "halloweem bg lightning strike0002",
+     "halloweem bg lightning strike0003",
+     "halloweem bg lightning strike0004",
+     "halloweem bg lightning strike0005",
+     "halloweem bg lightning strike0006"
+    ]
+   },
+   "atlasXml": "assets/week2/images/halloween_bg.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (8192x8192), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week2/images/spooky_kids_assets.png",
+   "url": "/games/friday-night-funkin/assets/week2/images/spooky_kids_assets.png",
+   "name": "spooky_kids_assets.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 714454,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 2 (Spooky Kids): Skid & Pump, sfondo halloween.",
+   "engine": false,
+   "width": 4096,
+   "height": 2048,
+   "frames": {
+    "count": 86,
+    "animations": [
+     "note sing left",
+     "spooky DOWN note",
+     "spooky UP NOTE",
+     "spooky dance idle",
+     "spooky sing right"
+    ],
+    "maxFrameWidth": 559,
+    "maxFrameHeight": 571,
+    "examples": [
+     "note sing left0000",
+     "note sing left0001",
+     "note sing left0002",
+     "note sing left0003",
+     "note sing left0004",
+     "note sing left0005",
+     "note sing left0006",
+     "note sing left0007"
+    ]
+   },
+   "atlasXml": "assets/week2/images/spooky_kids_assets.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/shared/sounds/ANGRY.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/ANGRY.mp3",
+   "name": "ANGRY.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 2418,
+   "screens": [
+    "week6"
+   ],
+   "role": "sfx",
+   "note": "SFX dialoghi pixel Week 6.",
+   "engine": false,
+   "durationSec": 0.16,
+   "sampleRate": 44100,
+   "bitrateKbps": 111,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/ANGRY_TEXT_BOX.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/ANGRY_TEXT_BOX.mp3",
+   "name": "ANGRY_TEXT_BOX.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 43182,
+   "screens": [
+    "week6"
+   ],
+   "role": "sfx",
+   "note": "SFX dialoghi pixel Week 6.",
+   "engine": false,
+   "durationSec": 3.66,
+   "sampleRate": 44100,
+   "bitrateKbps": 93,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/GF_1.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/GF_1.mp3",
+   "name": "GF_1.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 34480,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Risate di Girlfriend (4 varianti).",
+   "engine": false,
+   "durationSec": 0.86,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/GF_2.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/GF_2.mp3",
+   "name": "GF_2.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 34480,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Risate di Girlfriend (4 varianti).",
+   "engine": false,
+   "durationSec": 0.86,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/GF_3.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/GF_3.mp3",
+   "name": "GF_3.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 34480,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Risate di Girlfriend (4 varianti).",
+   "engine": false,
+   "durationSec": 0.86,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/GF_4.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/GF_4.mp3",
+   "name": "GF_4.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 34480,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Risate di Girlfriend (4 varianti).",
+   "engine": false,
+   "durationSec": 0.86,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/Lights_Shut_off.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/Lights_Shut_off.mp3",
+   "name": "Lights_Shut_off.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 53174,
+   "screens": [
+    "week6"
+   ],
+   "role": "sfx",
+   "note": "SFX dialoghi pixel Week 6.",
+   "engine": false,
+   "durationSec": 2.8,
+   "sampleRate": 44100,
+   "bitrateKbps": 151,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/Lights_Turn_On.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/Lights_Turn_On.mp3",
+   "name": "Lights_Turn_On.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 88390,
+   "screens": [
+    "week6"
+   ],
+   "role": "sfx",
+   "note": "SFX dialoghi pixel Week 6.",
+   "engine": false,
+   "durationSec": 4.68,
+   "sampleRate": 44100,
+   "bitrateKbps": 150,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/Senpai_Dies.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/Senpai_Dies.mp3",
+   "name": "Senpai_Dies.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 159129,
+   "screens": [
+    "week6"
+   ],
+   "role": "sfx",
+   "note": "SFX dialoghi pixel Week 6.",
+   "engine": false,
+   "durationSec": 7.37,
+   "sampleRate": 44100,
+   "bitrateKbps": 172,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/badnoise1.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/badnoise1.mp3",
+   "name": "badnoise1.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 34480,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Rumore nota sbagliata (3 varianti).",
+   "engine": false,
+   "durationSec": 0.86,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/badnoise2.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/badnoise2.mp3",
+   "name": "badnoise2.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 34480,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Rumore nota sbagliata (3 varianti).",
+   "engine": false,
+   "durationSec": 0.86,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/badnoise3.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/badnoise3.mp3",
+   "name": "badnoise3.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 34480,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Rumore nota sbagliata (3 varianti).",
+   "engine": false,
+   "durationSec": 0.86,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/carPass0.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/carPass0.mp3",
+   "name": "carPass0.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 54621,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Ambienti Week 3/4: treno e auto che passano.",
+   "engine": false,
+   "durationSec": 3.12,
+   "sampleRate": 48000,
+   "bitrateKbps": 139,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/carPass1.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/carPass1.mp3",
+   "name": "carPass1.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 60069,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Ambienti Week 3/4: treno e auto che passano.",
+   "engine": false,
+   "durationSec": 3.05,
+   "sampleRate": 48000,
+   "bitrateKbps": 157,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/clickText.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/clickText.mp3",
+   "name": "clickText.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 5888,
+   "screens": [
+    "week6"
+   ],
+   "role": "sfx",
+   "note": "SFX dialoghi pixel Week 6.",
+   "engine": false,
+   "durationSec": 0.31,
+   "sampleRate": 44100,
+   "bitrateKbps": 137,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/fnf_loss_sfx-pixel.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/fnf_loss_sfx-pixel.mp3",
+   "name": "fnf_loss_sfx-pixel.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 74226,
+   "screens": [
+    "gameover"
+   ],
+   "role": "sfx",
+   "note": "SFX di sconfitta (Blue Balls).",
+   "engine": false,
+   "durationSec": 4.13,
+   "sampleRate": 44100,
+   "bitrateKbps": 143,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/fnf_loss_sfx.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/fnf_loss_sfx.mp3",
+   "name": "fnf_loss_sfx.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 83302,
+   "screens": [
+    "gameover"
+   ],
+   "role": "sfx",
+   "note": "SFX di sconfitta (Blue Balls).",
+   "engine": false,
+   "durationSec": 4.13,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/intro1-pixel.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/intro1-pixel.mp3",
+   "name": "intro1-pixel.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 9155,
+   "screens": [],
+   "role": "audio",
+   "note": "",
+   "engine": false,
+   "durationSec": 0.49,
+   "sampleRate": 44100,
+   "bitrateKbps": 133,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/intro1.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/intro1.mp3",
+   "name": "intro1.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 11426,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Countdown '3/2/1' pre-canzone (1).",
+   "engine": false,
+   "durationSec": 0.5,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/intro2-pixel.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/intro2-pixel.mp3",
+   "name": "intro2-pixel.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 9912,
+   "screens": [],
+   "role": "audio",
+   "note": "",
+   "engine": false,
+   "durationSec": 0.5,
+   "sampleRate": 44100,
+   "bitrateKbps": 138,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/intro2.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/intro2.mp3",
+   "name": "intro2.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 12051,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Countdown '3/2/1' pre-canzone (2).",
+   "engine": false,
+   "durationSec": 0.51,
+   "sampleRate": 44100,
+   "bitrateKbps": 169,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/intro3-pixel.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/intro3-pixel.mp3",
+   "name": "intro3-pixel.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 9128,
+   "screens": [],
+   "role": "audio",
+   "note": "",
+   "engine": false,
+   "durationSec": 0.45,
+   "sampleRate": 44100,
+   "bitrateKbps": 140,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/intro3.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/intro3.mp3",
+   "name": "intro3.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 11582,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Countdown '3/2/1' pre-canzone (3).",
+   "engine": false,
+   "durationSec": 0.5,
+   "sampleRate": 44100,
+   "bitrateKbps": 170,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/introGo-pixel.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/introGo-pixel.mp3",
+   "name": "introGo-pixel.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 21651,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Countdown 'GO!'",
+   "engine": false,
+   "durationSec": 0.93,
+   "sampleRate": 44100,
+   "bitrateKbps": 175,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/introGo.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/introGo.mp3",
+   "name": "introGo.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 13254,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Countdown 'GO!'",
+   "engine": false,
+   "durationSec": 0.48,
+   "sampleRate": 44100,
+   "bitrateKbps": 196,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/missnote1.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/missnote1.mp3",
+   "name": "missnote1.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 68962,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Suono nota mancata (3 varianti).",
+   "engine": false,
+   "durationSec": 1.72,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/missnote2.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/missnote2.mp3",
+   "name": "missnote2.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 68962,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Suono nota mancata (3 varianti).",
+   "engine": false,
+   "durationSec": 1.72,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/missnote3.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/missnote3.mp3",
+   "name": "missnote3.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 68962,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Suono nota mancata (3 varianti).",
+   "engine": false,
+   "durationSec": 1.72,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/pixelText.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/pixelText.mp3",
+   "name": "pixelText.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1793,
+   "screens": [
+    "week6"
+   ],
+   "role": "sfx",
+   "note": "SFX dialoghi pixel Week 6.",
+   "engine": false,
+   "durationSec": 0.08,
+   "sampleRate": 44100,
+   "bitrateKbps": 159,
+   "channels": 1,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/soundTest.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/soundTest.mp3",
+   "name": "soundTest.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 320854,
+   "screens": [],
+   "role": "audio",
+   "note": "",
+   "engine": false,
+   "durationSec": 16.04,
+   "sampleRate": 44100,
+   "bitrateKbps": 160,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/thunder_1.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/thunder_1.mp3",
+   "name": "thunder_1.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 137925,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Tuoni Week 2 (spooky).",
+   "engine": false,
+   "durationSec": 3.45,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/thunder_2.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/thunder_2.mp3",
+   "name": "thunder_2.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 274807,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Tuoni Week 2 (spooky).",
+   "engine": false,
+   "durationSec": 6.87,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/sounds/train_passes.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/sounds/train_passes.mp3",
+   "name": "train_passes.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 277982,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sfx",
+   "note": "Ambienti Week 3/4: treno e auto che passano.",
+   "engine": false,
+   "durationSec": 14.47,
+   "sampleRate": 44100,
+   "bitrateKbps": 153,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/images/BOYFRIEND.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/BOYFRIEND.png",
+   "name": "BOYFRIEND.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 5042658,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "BOYFRIEND: personaggio giocante (atlas Sparrow, animazioni idle/miss/dies).",
+   "engine": false,
+   "width": 8192,
+   "height": 4096,
+   "frames": {
+    "count": 496,
+    "animations": [
+     "BF Dead Loop",
+     "BF Dead confirm",
+     "BF HEY!!",
+     "BF NOTE DOWN",
+     "BF NOTE DOWN MISS",
+     "BF NOTE LEFT",
+     "BF NOTE LEFT MISS",
+     "BF NOTE RIGHT",
+     "BF NOTE RIGHT MISS",
+     "BF NOTE UP",
+     "BF NOTE UP MISS",
+     "BF dies",
+     "BF hit",
+     "BF idle dance",
+     "BF idle shaking",
+     "bf pre attack",
+     "boyfriend attack",
+     "boyfriend dodge"
+    ],
+    "maxFrameWidth": 697,
+    "maxFrameHeight": 684,
+    "examples": [
+     "BF Dead Loop0000",
+     "BF Dead Loop0001",
+     "BF Dead Loop0002",
+     "BF Dead Loop0003",
+     "BF Dead Loop0004",
+     "BF Dead Loop0005",
+     "BF Dead Loop0006",
+     "BF Dead Loop0007"
+    ]
+   },
+   "atlasXml": "assets/shared/images/BOYFRIEND.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (8192x4096), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/shared/images/DADDY_DEAREST.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/DADDY_DEAREST.png",
+   "name": "DADDY_DEAREST.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1106359,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "DADDY DEAREST: antagonista Week 1 (atlas Sparrow).",
+   "engine": false,
+   "width": 4096,
+   "height": 2048,
+   "frames": {
+    "count": 45,
+    "animations": [
+     "Dad Sing Note DOWN",
+     "Dad Sing Note LEFT",
+     "Dad Sing Note RIGHT",
+     "Dad Sing Note UP",
+     "Dad idle dance"
+    ],
+    "maxFrameWidth": 470,
+    "maxFrameHeight": 818,
+    "examples": [
+     "Dad Sing Note DOWN0000",
+     "Dad Sing Note DOWN0001",
+     "Dad Sing Note DOWN0002",
+     "Dad Sing Note DOWN0003",
+     "Dad Sing Note DOWN0004",
+     "Dad Sing Note DOWN0005",
+     "Dad Sing Note DOWN0006",
+     "Dad Sing Note LEFT0000"
+    ]
+   },
+   "atlasXml": "assets/shared/images/DADDY_DEAREST.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/shared/images/GF_assets.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/GF_assets.png",
+   "name": "GF_assets.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 5966971,
+   "screens": [
+    "gameplay",
+    "title"
+   ],
+   "role": "sprite-atlas",
+   "note": "GIRLFRIEND: animazioni dance/cheer/cry (usata anche sul titolo).",
+   "engine": false,
+   "width": 8192,
+   "height": 8192,
+   "frames": {
+    "count": 252,
+    "animations": [
+     "GF Cheer",
+     "GF Dancing Beat",
+     "GF Dancing Beat Hair Landing",
+     "GF Dancing Beat Hair blowing",
+     "GF Down Note",
+     "GF FEAR",
+     "GF Right Note",
+     "GF Up Note",
+     "GF left note",
+     "gf sad"
+    ],
+    "maxFrameWidth": 748,
+    "maxFrameHeight": 661,
+    "examples": [
+     "GF Cheer0000",
+     "GF Cheer0001",
+     "GF Cheer0002",
+     "GF Cheer0003",
+     "GF Cheer0004",
+     "GF Cheer0005",
+     "GF Cheer0006",
+     "GF Cheer0007"
+    ]
+   },
+   "atlasXml": "assets/shared/images/GF_assets.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (8192x8192), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/shared/images/NOTE_assets.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/NOTE_assets.png",
+   "name": "NOTE_assets.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 716622,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "NOTE ASSETS: le 4 frecce strumline e le note che salgono. Asset chiave del gameplay.",
+   "engine": false,
+   "width": 2048,
+   "height": 1024,
+   "frames": {
+    "count": 48,
+    "animations": [
+     "arrowDOWN",
+     "arrowLEFT",
+     "arrowRIGHT",
+     "arrowUP",
+     "blue",
+     "blue hold end",
+     "blue hold piece",
+     "down confirm",
+     "down press",
+     "green",
+     "green hold end",
+     "green hold piece",
+     "left confirm",
+     "left press",
+     "pruple end hold",
+     "purple",
+     "purple hold piece",
+     "red",
+     "red hold end",
+     "red hold piece",
+     "right confirm",
+     "right press",
+     "up confirm",
+     "up press"
+    ],
+    "maxFrameWidth": 238,
+    "maxFrameHeight": 235,
+    "examples": [
+     "arrowDOWN0000",
+     "arrowLEFT0000",
+     "arrowRIGHT0000",
+     "arrowUP0000",
+     "blue0000",
+     "blue hold end0000",
+     "blue hold piece0000",
+     "down confirm0000"
+    ]
+   },
+   "atlasXml": "assets/shared/images/NOTE_assets.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (2048x1024), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/shared/images/backspace.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/backspace.png",
+   "name": "backspace.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 43348,
+   "screens": [
+    "freeplay"
+   ],
+   "role": "ui",
+   "note": "Indicatore BACK per tornare indietro.",
+   "engine": false,
+   "width": 1024,
+   "height": 512,
+   "frames": {
+    "count": 5,
+    "animations": [
+     "backspace PRESSED",
+     "backspace to exit",
+     "backspace to exit white"
+    ],
+    "maxFrameWidth": 314,
+    "maxFrameHeight": 174,
+    "examples": [
+     "backspace PRESSED0000",
+     "backspace PRESSED0001",
+     "backspace PRESSED0002",
+     "backspace to exit0000",
+     "backspace to exit white0000"
+    ]
+   },
+   "atlasXml": "assets/shared/images/backspace.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (1024x512), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/shared/images/bad.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/bad.png",
+   "name": "bad.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 11727,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Giudizi delle note (bad) in stile alfabeto.",
+   "engine": false,
+   "width": 261,
+   "height": 131,
+   "reskin": "PNG stesso nome e stesse dimensioni (261x131)"
+  },
+  {
+   "path": "assets/shared/images/combo.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/combo.png",
+   "name": "combo.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 14255,
+   "screens": [],
+   "role": "image",
+   "note": "",
+   "engine": false,
+   "width": 343,
+   "height": 138,
+   "reskin": "PNG stesso nome e stesse dimensioni (343x138)"
+  },
+  {
+   "path": "assets/shared/images/go.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/go.png",
+   "name": "go.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 12296,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Countdown 'GO/READY/SET'.",
+   "engine": false,
+   "width": 558,
+   "height": 430,
+   "reskin": "PNG stesso nome e stesse dimensioni (558x430)"
+  },
+  {
+   "path": "assets/shared/images/good.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/good.png",
+   "name": "good.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 11923,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Giudizi delle note (good) in stile alfabeto.",
+   "engine": false,
+   "width": 317,
+   "height": 126,
+   "reskin": "PNG stesso nome e stesse dimensioni (317x126)"
+  },
+  {
+   "path": "assets/shared/images/grafix.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/grafix.png",
+   "name": "grafix.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 139101,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Grafica combo/punteggio flottante.",
+   "engine": false,
+   "width": 1133,
+   "height": 902,
+   "reskin": "PNG stesso nome e stesse dimensioni (1133x902)"
+  },
+  {
+   "path": "assets/shared/images/healthBar.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/healthBar.png",
+   "name": "healthBar.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 307,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "ui",
+   "note": "Barra salute rossa/verde.",
+   "engine": false,
+   "width": 601,
+   "height": 19,
+   "reskin": "PNG stesso nome e stesse dimensioni (601x19)"
+  },
+  {
+   "path": "assets/shared/images/lol.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/lol.png",
+   "name": "lol.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 6701,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Asset secondari/nascosti (screenshot meme, prototype, note mancate).",
+   "engine": false,
+   "width": 252,
+   "height": 110,
+   "reskin": "PNG stesso nome e stesse dimensioni (252x110)"
+  },
+  {
+   "path": "assets/shared/images/lose.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/lose.png",
+   "name": "lose.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 236363,
+   "screens": [
+    "gameover"
+   ],
+   "role": "sprite-atlas",
+   "note": "Girlfriend che ride (Game Over) + testa di Boyfriend.",
+   "engine": false,
+   "width": 2048,
+   "height": 2048,
+   "frames": {
+    "count": 27,
+    "animations": [
+     "lose... instance"
+    ],
+    "maxFrameWidth": 783,
+    "maxFrameHeight": 457,
+    "examples": [
+     "lose... instance 10000",
+     "lose... instance 10001",
+     "lose... instance 10002",
+     "lose... instance 10003",
+     "lose... instance 10004",
+     "lose... instance 10005",
+     "lose... instance 10006",
+     "lose... instance 10007"
+    ]
+   },
+   "atlasXml": "assets/shared/images/lose.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (2048x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/shared/images/ready.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/ready.png",
+   "name": "ready.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 28966,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Countdown 'GO/READY/SET'.",
+   "engine": false,
+   "width": 757,
+   "height": 364,
+   "reskin": "PNG stesso nome e stesse dimensioni (757x364)"
+  },
+  {
+   "path": "assets/shared/images/restart.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/restart.png",
+   "name": "restart.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 41117,
+   "screens": [],
+   "role": "image",
+   "note": "",
+   "engine": false,
+   "width": 1011,
+   "height": 277,
+   "reskin": "PNG stesso nome e stesse dimensioni (1011x277)"
+  },
+  {
+   "path": "assets/shared/images/screencapTierImage.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/screencapTierImage.png",
+   "name": "screencapTierImage.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 109151,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Asset secondari/nascosti (screenshot meme, prototype, note mancate).",
+   "engine": false,
+   "width": 956,
+   "height": 294,
+   "reskin": "PNG stesso nome e stesse dimensioni (956x294)"
+  },
+  {
+   "path": "assets/shared/images/set.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/set.png",
+   "name": "set.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 25471,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Countdown 'GO/READY/SET'.",
+   "engine": false,
+   "width": 702,
+   "height": 322,
+   "reskin": "PNG stesso nome e stesse dimensioni (702x322)"
+  },
+  {
+   "path": "assets/shared/images/shit.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/shit.png",
+   "name": "shit.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 15319,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Giudizi delle note (shit) in stile alfabeto.",
+   "engine": false,
+   "width": 285,
+   "height": 163,
+   "reskin": "PNG stesso nome e stesse dimensioni (285x163)"
+  },
+  {
+   "path": "assets/shared/images/sick.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/sick.png",
+   "name": "sick.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 19249,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Giudizi delle note (sick) in stile alfabeto.",
+   "engine": false,
+   "width": 403,
+   "height": 152,
+   "reskin": "PNG stesso nome e stesse dimensioni (403x152)"
+  },
+  {
+   "path": "assets/shared/images/speech_bubble_talking.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/speech_bubble_talking.png",
+   "name": "speech_bubble_talking.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 201150,
+   "screens": [
+    "week6"
+   ],
+   "role": "ui",
+   "note": "Bolle di dialogo pixel (week 6).",
+   "engine": false,
+   "width": 4096,
+   "height": 2048,
+   "frames": {
+    "count": 31,
+    "animations": [
+     "AHH speech bubble",
+     "Speech Bubble Normal Open",
+     "speech bubble loud open",
+     "speech bubble normal"
+    ],
+    "maxFrameWidth": 1367,
+    "maxFrameHeight": 507,
+    "examples": [
+     "AHH speech bubble0000",
+     "AHH speech bubble0001",
+     "AHH speech bubble0002",
+     "Speech Bubble Normal Open0000",
+     "Speech Bubble Normal Open0001",
+     "Speech Bubble Normal Open0002",
+     "Speech Bubble Normal Open0003",
+     "Speech Bubble Normal Open0004"
+    ]
+   },
+   "atlasXml": "assets/shared/images/speech_bubble_talking.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/shared/images/stage_light.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/stage_light.png",
+   "name": "stage_light.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 12177,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "background",
+   "note": "Palco Week 1: fondo scena, palco frontale, sipario rosso, luci.",
+   "engine": false,
+   "width": 230,
+   "height": 244,
+   "reskin": "PNG stesso nome e stesse dimensioni (230x244)"
+  },
+  {
+   "path": "assets/shared/images/stageback.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/stageback.png",
+   "name": "stageback.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 36925,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "background",
+   "note": "Palco Week 1: fondo scena, palco frontale, sipario rosso, luci.",
+   "engine": false,
+   "width": 2560,
+   "height": 1400,
+   "reskin": "PNG stesso nome e stesse dimensioni (2560x1400)"
+  },
+  {
+   "path": "assets/shared/images/stagecurtains.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/stagecurtains.png",
+   "name": "stagecurtains.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 154716,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "background",
+   "note": "Palco Week 1: fondo scena, palco frontale, sipario rosso, luci.",
+   "engine": false,
+   "width": 2560,
+   "height": 1400,
+   "reskin": "PNG stesso nome e stesse dimensioni (2560x1400)"
+  },
+  {
+   "path": "assets/shared/images/stagefront.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/stagefront.png",
+   "name": "stagefront.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 143142,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "background",
+   "note": "Palco Week 1: fondo scena, palco frontale, sipario rosso, luci.",
+   "engine": false,
+   "width": 2560,
+   "height": 581,
+   "reskin": "PNG stesso nome e stesse dimensioni (2560x581)"
+  },
+  {
+   "path": "assets/shared/images/week54prototype.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/week54prototype.png",
+   "name": "week54prototype.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 199012,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Asset secondari/nascosti (screenshot meme, prototype, note mancate).",
+   "engine": false,
+   "width": 393,
+   "height": 463,
+   "reskin": "PNG stesso nome e stesse dimensioni (393x463)"
+  },
+  {
+   "path": "assets/shared/images/zzzzzzzz.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/zzzzzzzz.png",
+   "name": "zzzzzzzz.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 239054,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Asset secondari/nascosti (screenshot meme, prototype, note mancate).",
+   "engine": false,
+   "width": 1175,
+   "height": 724,
+   "reskin": "PNG stesso nome e stesse dimensioni (1175x724)"
+  },
+  {
+   "path": "assets/shared/images/pauseAlt/bfLol.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/pauseAlt/bfLol.png",
+   "name": "bfLol.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 36765,
+   "screens": [
+    "pause"
+   ],
+   "role": "ui",
+   "note": "Asset menu pausa alternativo (sfondo, UI, BF seduto).",
+   "engine": false,
+   "width": 512,
+   "height": 512,
+   "frames": {
+    "count": 20,
+    "animations": [
+     "funnyThing instance"
+    ],
+    "maxFrameWidth": 280,
+    "maxFrameHeight": 204,
+    "examples": [
+     "funnyThing instance 10000",
+     "funnyThing instance 10001",
+     "funnyThing instance 10002",
+     "funnyThing instance 10003",
+     "funnyThing instance 10004",
+     "funnyThing instance 10005",
+     "funnyThing instance 10006",
+     "funnyThing instance 10007"
+    ]
+   },
+   "atlasXml": "assets/shared/images/pauseAlt/bfLol.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (512x512), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/shared/images/pauseAlt/pauseBG.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/pauseAlt/pauseBG.png",
+   "name": "pauseBG.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 96791,
+   "screens": [
+    "pause"
+   ],
+   "role": "ui",
+   "note": "Asset menu pausa alternativo (sfondo, UI, BF seduto).",
+   "engine": false,
+   "width": 1280,
+   "height": 720,
+   "reskin": "PNG stesso nome e stesse dimensioni (1280x720)"
+  },
+  {
+   "path": "assets/shared/images/pauseAlt/pauseUI.png",
+   "url": "/games/friday-night-funkin/assets/shared/images/pauseAlt/pauseUI.png",
+   "name": "pauseUI.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 40939,
+   "screens": [
+    "pause"
+   ],
+   "role": "ui",
+   "note": "Asset menu pausa alternativo (sfondo, UI, BF seduto).",
+   "engine": false,
+   "width": 1024,
+   "height": 1024,
+   "frames": {
+    "count": 4,
+    "animations": [
+     "bluecancel instance",
+     "bluereplay instance",
+     "cancelyellow instance",
+     "yellowreplay instance"
+    ],
+    "maxFrameWidth": 977,
+    "maxFrameHeight": 200,
+    "examples": [
+     "bluecancel instance 10000",
+     "bluereplay instance 10000",
+     "cancelyellow instance 10000",
+     "yellowreplay instance 10000"
+    ]
+   },
+   "atlasXml": "assets/shared/images/pauseAlt/pauseUI.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (1024x1024), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/shared/music/breakfast.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/music/breakfast.mp3",
+   "name": "breakfast.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 2400129,
+   "screens": [
+    "pause"
+   ],
+   "role": "music",
+   "note": "Musica del menu pausa.",
+   "engine": false,
+   "durationSec": 60.0,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/music/gameOver.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/music/gameOver.mp3",
+   "name": "gameOver.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 1535999,
+   "screens": [
+    "gameover"
+   ],
+   "role": "music",
+   "note": "Musica Game Over (Blue Balls Anthem loop).",
+   "engine": false,
+   "durationSec": 38.4,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/shared/music/gameOverEnd.mp3",
+   "url": "/games/friday-night-funkin/assets/shared/music/gameOverEnd.mp3",
+   "name": "gameOverEnd.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 288391,
+   "screens": [
+    "gameover"
+   ],
+   "role": "music",
+   "note": "Fine musicale del game over (ripresa).",
+   "engine": false,
+   "durationSec": 7.21,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/sounds/cancelMenu.mp3",
+   "url": "/games/friday-night-funkin/assets/sounds/cancelMenu.mp3",
+   "name": "cancelMenu.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 17762,
+   "screens": [
+    "menu"
+   ],
+   "role": "sfx",
+   "note": "SFX dei menu (scroll/cancel/confirm).",
+   "engine": false,
+   "durationSec": 0.44,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/sounds/confirmMenu.mp3",
+   "url": "/games/friday-night-funkin/assets/sounds/confirmMenu.mp3",
+   "name": "confirmMenu.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 91950,
+   "screens": [
+    "menu"
+   ],
+   "role": "sfx",
+   "note": "SFX dei menu (scroll/cancel/confirm).",
+   "engine": false,
+   "durationSec": 2.3,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/sounds/scrollMenu.mp3",
+   "url": "/games/friday-night-funkin/assets/sounds/scrollMenu.mp3",
+   "name": "scrollMenu.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 17762,
+   "screens": [
+    "menu"
+   ],
+   "role": "sfx",
+   "note": "SFX dei menu (scroll/cancel/confirm).",
+   "engine": false,
+   "durationSec": 0.44,
+   "sampleRate": 44100,
+   "bitrateKbps": 320,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/images/FNF_main_menu_assets.png",
+   "url": "/games/friday-night-funkin/assets/images/FNF_main_menu_assets.png",
+   "name": "FNF_main_menu_assets.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 329717,
+   "screens": [
+    "menu"
+   ],
+   "role": "sprite-atlas",
+   "note": "Sprites del menu principale: icone voce (story/freeplay/donate...), freccia di selezione, logo scartato.",
+   "engine": false,
+   "width": 2048,
+   "height": 2048,
+   "frames": {
+    "count": 62,
+    "animations": [
+     "donate basic",
+     "donate white",
+     "freeplay basic",
+     "freeplay white",
+     "google play basic",
+     "google play white",
+     "options basic",
+     "options white",
+     "story mode basic",
+     "story mode white"
+    ],
+    "maxFrameWidth": 796,
+    "maxFrameHeight": 181,
+    "examples": [
+     "donate basic0000",
+     "donate basic0001",
+     "donate basic0002",
+     "donate basic0003",
+     "donate basic0004",
+     "donate basic0005",
+     "donate basic0006",
+     "donate basic0007"
+    ]
+   },
+   "atlasXml": "assets/images/FNF_main_menu_assets.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (2048x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/images/alphabet.png",
+   "url": "/games/friday-night-funkin/assets/images/alphabet.png",
+   "name": "alphabet.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 139836,
+   "screens": [
+    "menu",
+    "story",
+    "freeplay",
+    "gameplay"
+   ],
+   "role": "font-sprite",
+   "note": "Alphabet: font a sprite usato per quasi tutti i testi di gioco.",
+   "engine": false,
+   "width": 1024,
+   "height": 1024,
+   "atlasXml": "assets/images/alphabet.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (1024x1024)"
+  },
+  {
+   "path": "assets/images/buttons.png",
+   "url": "/games/friday-night-funkin/assets/images/buttons.png",
+   "name": "buttons.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 273321,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Pulsanti touch on-screen (mobile).",
+   "engine": false,
+   "width": 1024,
+   "height": 1024,
+   "frames": {
+    "count": 15,
+    "animations": [
+     "back instance",
+     "back pressed instance",
+     "down instance",
+     "down pressed instance",
+     "googlePlay instance",
+     "left instance",
+     "left pressed instance",
+     "pause instance",
+     "pause pressed instance",
+     "play instance",
+     "play pressed instance",
+     "right instance",
+     "right pressed instance",
+     "up instance",
+     "up pressed instance"
+    ],
+    "maxFrameWidth": 359,
+    "maxFrameHeight": 149,
+    "examples": [
+     "back instance 10000",
+     "back pressed instance 10000",
+     "down instance 10000",
+     "down pressed instance 10000",
+     "googlePlay instance 10000",
+     "left instance 10000",
+     "left pressed instance 10000",
+     "pause instance 10000"
+    ]
+   },
+   "atlasXml": "assets/images/buttons.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (1024x1024), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/images/campaign_menu_UI_assets.png",
+   "url": "/games/friday-night-funkin/assets/images/campaign_menu_UI_assets.png",
+   "name": "campaign_menu_UI_assets.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 27171,
+   "screens": [
+    "story"
+   ],
+   "role": "sprite-atlas",
+   "note": "UI della selezione settimana: frecce, lucchetto LOCK, pannelli.",
+   "engine": false,
+   "width": 1024,
+   "height": 1024,
+   "frames": {
+    "count": 22,
+    "animations": [
+     "EASY",
+     "HARD",
+     "NORMAL",
+     "WEEK",
+     "Week",
+     "arrow left",
+     "arrow push left",
+     "arrow push right",
+     "arrow right",
+     "lock",
+     "tutorial selected",
+     "week"
+    ],
+    "maxFrameWidth": 443,
+    "maxFrameHeight": 93,
+    "examples": [
+     "EASY0000",
+     "HARD0000",
+     "NORMAL0000",
+     "WEEK1 select0000",
+     "WEEK1 select0001",
+     "Week 3 press0000",
+     "Week 3 press0001",
+     "Week 4 press0000"
+    ]
+   },
+   "atlasXml": "assets/images/campaign_menu_UI_assets.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (1024x1024), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/images/campaign_menu_UI_characters.png",
+   "url": "/games/friday-night-funkin/assets/images/campaign_menu_UI_characters.png",
+   "name": "campaign_menu_UI_characters.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 2285826,
+   "screens": [
+    "story"
+   ],
+   "role": "sprite-atlas",
+   "note": "Ritratti personaggi della selezione settimana (Dad, Skid&Pump, Pico, Mom, Monster, Senpai, Tankman).",
+   "engine": false,
+   "width": 8192,
+   "height": 4096,
+   "frames": {
+    "count": 156,
+    "animations": [
+     "BF HEY!!",
+     "BF idle dance white",
+     "Dad idle dance BLACK LINE",
+     "GF Dancing Beat WHITE",
+     "Mom Idle BLACK LINES",
+     "Parent Christmas Idle Black Lines",
+     "Pico Idle Dance",
+     "SENPAI idle Black Lines",
+     "spooky dance idle BLACK LINES"
+    ],
+    "maxFrameWidth": 877,
+    "maxFrameHeight": 829,
+    "examples": [
+     "BF HEY!!0000",
+     "BF HEY!!0001",
+     "BF HEY!!0002",
+     "BF HEY!!0003",
+     "BF HEY!!0004",
+     "BF HEY!!0005",
+     "BF HEY!!0006",
+     "BF HEY!!0007"
+    ]
+   },
+   "atlasXml": "assets/images/campaign_menu_UI_characters.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (8192x4096), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/images/gfDanceTitle.png",
+   "url": "/games/friday-night-funkin/assets/images/gfDanceTitle.png",
+   "name": "gfDanceTitle.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1221436,
+   "screens": [
+    "title"
+   ],
+   "role": "sprite-atlas",
+   "note": "Girlfriend che balla sugli speaker nella schermata titolo (atlas Sparrow: animazioni dance).",
+   "engine": false,
+   "width": 4096,
+   "height": 4096,
+   "frames": {
+    "count": 30,
+    "animations": [
+     "gfDance"
+    ],
+    "maxFrameWidth": 721,
+    "maxFrameHeight": 662,
+    "examples": [
+     "gfDance0000",
+     "gfDance0001",
+     "gfDance0002",
+     "gfDance0003",
+     "gfDance0004",
+     "gfDance0005",
+     "gfDance0006",
+     "gfDance0007"
+    ]
+   },
+   "atlasXml": "assets/images/gfDanceTitle.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x4096), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/images/iconGrid.png",
+   "url": "/games/friday-night-funkin/assets/images/iconGrid.png",
+   "name": "iconGrid.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 147419,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Griglia 150 icone salute (stati win/lose di ogni personaggio).",
+   "engine": false,
+   "width": 1500,
+   "height": 900,
+   "reskin": "PNG stesso nome e stesse dimensioni (1500x900)"
+  },
+  {
+   "path": "assets/images/logo.png",
+   "url": "/games/friday-night-funkin/assets/images/logo.png",
+   "name": "logo.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 86924,
+   "screens": [
+    "menu"
+   ],
+   "role": "sprite",
+   "note": "Logo statico (icona menu).",
+   "engine": false,
+   "width": 806,
+   "height": 429,
+   "reskin": "PNG stesso nome e stesse dimensioni (806x429)"
+  },
+  {
+   "path": "assets/images/logoBumpin.png",
+   "url": "/games/friday-night-funkin/assets/images/logoBumpin.png",
+   "name": "logoBumpin.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 592724,
+   "screens": [
+    "title"
+   ],
+   "role": "sprite-atlas",
+   "note": "Logo animato FRIDAY NIGHT FUNKIN' del titolo (atlas Sparrow: animazione 'bump' a tempo di musica).",
+   "engine": false,
+   "width": 2048,
+   "height": 2048,
+   "frames": {
+    "count": 15,
+    "animations": [
+     "logo bumpin"
+    ],
+    "maxFrameWidth": 939,
+    "maxFrameHeight": 703,
+    "examples": [
+     "logo bumpin0000",
+     "logo bumpin0001",
+     "logo bumpin0002",
+     "logo bumpin0003",
+     "logo bumpin0004",
+     "logo bumpin0005",
+     "logo bumpin0006",
+     "logo bumpin0007"
+    ]
+   },
+   "atlasXml": "assets/images/logoBumpin.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (2048x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/images/menuBG.png",
+   "url": "/games/friday-night-funkin/assets/images/menuBG.png",
+   "name": "menuBG.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 620342,
+   "screens": [
+    "menu",
+    "story",
+    "freeplay"
+   ],
+   "role": "background",
+   "note": "Sfondo standard dei menu (circa 1280x720).",
+   "engine": false,
+   "width": 1286,
+   "height": 730,
+   "reskin": "PNG stesso nome e stesse dimensioni (1286x730)"
+  },
+  {
+   "path": "assets/images/menuBGBlue.png",
+   "url": "/games/friday-night-funkin/assets/images/menuBGBlue.png",
+   "name": "menuBGBlue.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 614586,
+   "screens": [
+    "freeplay"
+   ],
+   "role": "background",
+   "note": "Sfondo menu variante blu (freeplay).",
+   "engine": false,
+   "width": 1286,
+   "height": 730,
+   "reskin": "PNG stesso nome e stesse dimensioni (1286x730)"
+  },
+  {
+   "path": "assets/images/menuBGMagenta.png",
+   "url": "/games/friday-night-funkin/assets/images/menuBGMagenta.png",
+   "name": "menuBGMagenta.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 553468,
+   "screens": [
+    "freeplay"
+   ],
+   "role": "background",
+   "note": "Sfondo menu variante magenta (freeplay).",
+   "engine": false,
+   "width": 1286,
+   "height": 730,
+   "reskin": "PNG stesso nome e stesse dimensioni (1286x730)"
+  },
+  {
+   "path": "assets/images/menuDesat.png",
+   "url": "/games/friday-night-funkin/assets/images/menuDesat.png",
+   "name": "menuDesat.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 357911,
+   "screens": [
+    "menu"
+   ],
+   "role": "background",
+   "note": "Sfondo menu desaturato (usato da effetti/menus).",
+   "engine": false,
+   "width": 1286,
+   "height": 730,
+   "reskin": "PNG stesso nome e stesse dimensioni (1286x730)"
+  },
+  {
+   "path": "assets/images/newgrounds_logo.png",
+   "url": "/games/friday-night-funkin/assets/images/newgrounds_logo.png",
+   "name": "newgrounds_logo.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 57747,
+   "screens": [
+    "title"
+   ],
+   "role": "sprite",
+   "note": "Logo Newgrounds (splash).",
+   "engine": false,
+   "width": 362,
+   "height": 350,
+   "reskin": "PNG stesso nome e stesse dimensioni (362x350)"
+  },
+  {
+   "path": "assets/images/num0.png",
+   "url": "/games/friday-night-funkin/assets/images/num0.png",
+   "name": "num0.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 3738,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Cifra 0 per il conteggio punteggio a schermo.",
+   "engine": false,
+   "width": 94,
+   "height": 119,
+   "reskin": "PNG stesso nome e stesse dimensioni (94x119)"
+  },
+  {
+   "path": "assets/images/num1.png",
+   "url": "/games/friday-night-funkin/assets/images/num1.png",
+   "name": "num1.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 3390,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Cifra 1 per il conteggio punteggio a schermo.",
+   "engine": false,
+   "width": 98,
+   "height": 120,
+   "reskin": "PNG stesso nome e stesse dimensioni (98x120)"
+  },
+  {
+   "path": "assets/images/num2.png",
+   "url": "/games/friday-night-funkin/assets/images/num2.png",
+   "name": "num2.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 3990,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Cifra 2 per il conteggio punteggio a schermo.",
+   "engine": false,
+   "width": 105,
+   "height": 129,
+   "reskin": "PNG stesso nome e stesse dimensioni (105x129)"
+  },
+  {
+   "path": "assets/images/num3.png",
+   "url": "/games/friday-night-funkin/assets/images/num3.png",
+   "name": "num3.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 4022,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Cifra 3 per il conteggio punteggio a schermo.",
+   "engine": false,
+   "width": 102,
+   "height": 134,
+   "reskin": "PNG stesso nome e stesse dimensioni (102x134)"
+  },
+  {
+   "path": "assets/images/num4.png",
+   "url": "/games/friday-night-funkin/assets/images/num4.png",
+   "name": "num4.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 3989,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Cifra 4 per il conteggio punteggio a schermo.",
+   "engine": false,
+   "width": 98,
+   "height": 130,
+   "reskin": "PNG stesso nome e stesse dimensioni (98x130)"
+  },
+  {
+   "path": "assets/images/num5.png",
+   "url": "/games/friday-night-funkin/assets/images/num5.png",
+   "name": "num5.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 4113,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Cifra 5 per il conteggio punteggio a schermo.",
+   "engine": false,
+   "width": 111,
+   "height": 135,
+   "reskin": "PNG stesso nome e stesse dimensioni (111x135)"
+  },
+  {
+   "path": "assets/images/num6.png",
+   "url": "/games/friday-night-funkin/assets/images/num6.png",
+   "name": "num6.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 4181,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Cifra 6 per il conteggio punteggio a schermo.",
+   "engine": false,
+   "width": 108,
+   "height": 134,
+   "reskin": "PNG stesso nome e stesse dimensioni (108x134)"
+  },
+  {
+   "path": "assets/images/num7.png",
+   "url": "/games/friday-night-funkin/assets/images/num7.png",
+   "name": "num7.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 3692,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Cifra 7 per il conteggio punteggio a schermo.",
+   "engine": false,
+   "width": 91,
+   "height": 111,
+   "reskin": "PNG stesso nome e stesse dimensioni (91x111)"
+  },
+  {
+   "path": "assets/images/num8.png",
+   "url": "/games/friday-night-funkin/assets/images/num8.png",
+   "name": "num8.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 3914,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Cifra 8 per il conteggio punteggio a schermo.",
+   "engine": false,
+   "width": 90,
+   "height": 115,
+   "reskin": "PNG stesso nome e stesse dimensioni (90x115)"
+  },
+  {
+   "path": "assets/images/num9.png",
+   "url": "/games/friday-night-funkin/assets/images/num9.png",
+   "name": "num9.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 3687,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite",
+   "note": "Cifra 9 per il conteggio punteggio a schermo.",
+   "engine": false,
+   "width": 91,
+   "height": 124,
+   "reskin": "PNG stesso nome e stesse dimensioni (91x124)"
+  },
+  {
+   "path": "assets/images/titleEnter.png",
+   "url": "/games/friday-night-funkin/assets/images/titleEnter.png",
+   "name": "titleEnter.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1449202,
+   "screens": [
+    "title"
+   ],
+   "role": "sprite",
+   "note": "Scritta 'Press Enter to Begin' che pulsa.",
+   "engine": false,
+   "width": 4096,
+   "height": 4096,
+   "frames": {
+    "count": 54,
+    "animations": [
+     "ENTER PRESSED",
+     "Press Enter to Begin"
+    ],
+    "maxFrameWidth": 1495,
+    "maxFrameHeight": 96,
+    "examples": [
+     "ENTER PRESSED0000",
+     "ENTER PRESSED0001",
+     "ENTER PRESSED0002",
+     "ENTER PRESSED0003",
+     "ENTER PRESSED0004",
+     "ENTER PRESSED0005",
+     "ENTER PRESSED0006",
+     "ENTER PRESSED0007"
+    ]
+   },
+   "atlasXml": "assets/images/titleEnter.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x4096), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/images/storymenu/week0.png",
+   "url": "/games/friday-night-funkin/assets/images/storymenu/week0.png",
+   "name": "week0.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 7056,
+   "screens": [
+    "story"
+   ],
+   "role": "sprite",
+   "note": "Banner della settimana 0 nello Story Mode.",
+   "engine": false,
+   "width": 443,
+   "height": 82,
+   "reskin": "PNG stesso nome e stesse dimensioni (443x82)"
+  },
+  {
+   "path": "assets/images/storymenu/week1.png",
+   "url": "/games/friday-night-funkin/assets/images/storymenu/week1.png",
+   "name": "week1.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 6261,
+   "screens": [
+    "story"
+   ],
+   "role": "sprite",
+   "note": "Banner della settimana 1 nello Story Mode.",
+   "engine": false,
+   "width": 359,
+   "height": 89,
+   "reskin": "PNG stesso nome e stesse dimensioni (359x89)"
+  },
+  {
+   "path": "assets/images/storymenu/week2.png",
+   "url": "/games/friday-night-funkin/assets/images/storymenu/week2.png",
+   "name": "week2.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 6517,
+   "screens": [
+    "story"
+   ],
+   "role": "sprite",
+   "note": "Banner della settimana 2 nello Story Mode.",
+   "engine": false,
+   "width": 359,
+   "height": 89,
+   "reskin": "PNG stesso nome e stesse dimensioni (359x89)"
+  },
+  {
+   "path": "assets/images/storymenu/week3.png",
+   "url": "/games/friday-night-funkin/assets/images/storymenu/week3.png",
+   "name": "week3.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 7148,
+   "screens": [
+    "story"
+   ],
+   "role": "sprite",
+   "note": "Banner della settimana 3 nello Story Mode.",
+   "engine": false,
+   "width": 358,
+   "height": 89,
+   "reskin": "PNG stesso nome e stesse dimensioni (358x89)"
+  },
+  {
+   "path": "assets/images/storymenu/week4.png",
+   "url": "/games/friday-night-funkin/assets/images/storymenu/week4.png",
+   "name": "week4.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 6262,
+   "screens": [
+    "story"
+   ],
+   "role": "sprite",
+   "note": "Banner della settimana 4 nello Story Mode.",
+   "engine": false,
+   "width": 354,
+   "height": 88,
+   "reskin": "PNG stesso nome e stesse dimensioni (354x88)"
+  },
+  {
+   "path": "assets/images/storymenu/week5.png",
+   "url": "/games/friday-night-funkin/assets/images/storymenu/week5.png",
+   "name": "week5.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 6440,
+   "screens": [
+    "story"
+   ],
+   "role": "sprite",
+   "note": "Banner della settimana 5 nello Story Mode.",
+   "engine": false,
+   "width": 364,
+   "height": 91,
+   "reskin": "PNG stesso nome e stesse dimensioni (364x91)"
+  },
+  {
+   "path": "assets/images/storymenu/week6.png",
+   "url": "/games/friday-night-funkin/assets/images/storymenu/week6.png",
+   "name": "week6.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 6998,
+   "screens": [
+    "story"
+   ],
+   "role": "sprite",
+   "note": "Banner della settimana 6 nello Story Mode.",
+   "engine": false,
+   "width": 359,
+   "height": 104,
+   "reskin": "PNG stesso nome e stesse dimensioni (359x104)"
+  },
+  {
+   "path": "assets/data/characterList.txt",
+   "url": "/games/friday-night-funkin/assets/data/characterList.txt",
+   "name": "characterList.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 162,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "text",
+   "note": "Lista personaggi icone salute.",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "assets/data/controls.txt",
+   "url": "/games/friday-night-funkin/assets/data/controls.txt",
+   "name": "controls.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 355,
+   "screens": [
+    "menu"
+   ],
+   "role": "text",
+   "note": "Testo istruzioni controlli.",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "assets/data/freeplaySonglist.txt",
+   "url": "/games/friday-night-funkin/assets/data/freeplaySonglist.txt",
+   "name": "freeplaySonglist.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 8,
+   "screens": [
+    "freeplay"
+   ],
+   "role": "text",
+   "note": "Lista brani del Freeplay (nome:difficoltà).",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "assets/data/introText.txt",
+   "url": "/games/friday-night-funkin/assets/data/introText.txt",
+   "name": "introText.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 1301,
+   "screens": [
+    "title"
+   ],
+   "role": "text",
+   "note": "Frasi casuali mostrate prima del titolo.",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "assets/data/specialThanks.txt",
+   "url": "/games/friday-night-funkin/assets/data/specialThanks.txt",
+   "name": "specialThanks.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 322,
+   "screens": [
+    "menu"
+   ],
+   "role": "text",
+   "note": "Ringraziamenti speciali.",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "assets/data/senpai/senpaiDialogue.txt",
+   "url": "/games/friday-night-funkin/assets/data/senpai/senpaiDialogue.txt",
+   "name": "senpaiDialogue.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 164,
+   "screens": [],
+   "role": "text",
+   "note": "",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "assets/data/thorns/thornsDialogue.txt",
+   "url": "/games/friday-night-funkin/assets/data/thorns/thornsDialogue.txt",
+   "name": "thornsDialogue.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 309,
+   "screens": [],
+   "role": "text",
+   "note": "",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "assets/data/roses/rosesDialogue.txt",
+   "url": "/games/friday-night-funkin/assets/data/roses/rosesDialogue.txt",
+   "name": "rosesDialogue.txt",
+   "type": "text",
+   "format": "txt",
+   "bytes": 155,
+   "screens": [],
+   "role": "text",
+   "note": "",
+   "engine": false,
+   "reskin": "Testo: stesso nome file"
+  },
+  {
+   "path": "assets/music/freakyMenu.mp3",
+   "url": "/games/friday-night-funkin/assets/music/freakyMenu.mp3",
+   "name": "freakyMenu.mp3",
+   "type": "audio",
+   "format": "mp3",
+   "bytes": 2309657,
+   "screens": [
+    "title",
+    "menu"
+   ],
+   "role": "music",
+   "note": "Musica dei menu (freakyMenu).",
+   "engine": false,
+   "durationSec": 112.91,
+   "sampleRate": 44100,
+   "bitrateKbps": 163,
+   "channels": 2,
+   "reskin": "Stesso nome, formato e durata equivalente (loop se maricato come loop)"
+  },
+  {
+   "path": "assets/week4/images/Mom_Assets.png",
+   "url": "/games/friday-night-funkin/assets/week4/images/Mom_Assets.png",
+   "name": "Mom_Assets.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1816373,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 4 (Mommy Mearest): Mom, limo, dancer, tramonto.",
+   "engine": false,
+   "width": 4096,
+   "height": 4096,
+   "frames": {
+    "count": 64,
+    "animations": [
+     "MOM DOWN POSE",
+     "Mom Idle",
+     "Mom Left Pose",
+     "Mom Pose Left",
+     "Mom Up Pose"
+    ],
+    "maxFrameWidth": 602,
+    "maxFrameHeight": 862,
+    "examples": [
+     "MOM DOWN POSE0000",
+     "MOM DOWN POSE0001",
+     "MOM DOWN POSE0002",
+     "MOM DOWN POSE0003",
+     "MOM DOWN POSE0004",
+     "MOM DOWN POSE0005",
+     "MOM DOWN POSE0006",
+     "MOM DOWN POSE0007"
+    ]
+   },
+   "atlasXml": "assets/week4/images/Mom_Assets.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x4096), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week4/images/bfCar.png",
+   "url": "/games/friday-night-funkin/assets/week4/images/bfCar.png",
+   "name": "bfCar.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1806271,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 4 (Mommy Mearest): Mom, limo, dancer, tramonto.",
+   "engine": false,
+   "width": 4096,
+   "height": 4096,
+   "frames": {
+    "count": 270,
+    "animations": [
+     "BF NOTE DOWN",
+     "BF NOTE DOWN MISS",
+     "BF NOTE LEFT",
+     "BF NOTE LEFT MISS",
+     "BF NOTE RIGHT",
+     "BF NOTE RIGHT MISS",
+     "BF NOTE UP",
+     "BF NOTE UP MISS",
+     "BF idle dance"
+    ],
+    "maxFrameWidth": 410,
+    "maxFrameHeight": 446,
+    "examples": [
+     "BF NOTE DOWN0000",
+     "BF NOTE DOWN0001",
+     "BF NOTE DOWN0002",
+     "BF NOTE DOWN0003",
+     "BF NOTE DOWN0004",
+     "BF NOTE DOWN0005",
+     "BF NOTE DOWN0006",
+     "BF NOTE DOWN0007"
+    ]
+   },
+   "atlasXml": "assets/week4/images/bfCar.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x4096), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week4/images/gfCar.png",
+   "url": "/games/friday-night-funkin/assets/week4/images/gfCar.png",
+   "name": "gfCar.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1943171,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 4 (Mommy Mearest): Mom, limo, dancer, tramonto.",
+   "engine": false,
+   "width": 4096,
+   "height": 4096,
+   "frames": {
+    "count": 30,
+    "animations": [
+     "GF Dancing Beat Hair blowing CAR"
+    ],
+    "maxFrameWidth": 766,
+    "maxFrameHeight": 649,
+    "examples": [
+     "GF Dancing Beat Hair blowing CAR0000",
+     "GF Dancing Beat Hair blowing CAR0001",
+     "GF Dancing Beat Hair blowing CAR0002",
+     "GF Dancing Beat Hair blowing CAR0003",
+     "GF Dancing Beat Hair blowing CAR0004",
+     "GF Dancing Beat Hair blowing CAR0005",
+     "GF Dancing Beat Hair blowing CAR0006",
+     "GF Dancing Beat Hair blowing CAR0007"
+    ]
+   },
+   "atlasXml": "assets/week4/images/gfCar.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x4096), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week4/images/momCar.png",
+   "url": "/games/friday-night-funkin/assets/week4/images/momCar.png",
+   "name": "momCar.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 3421816,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 4 (Mommy Mearest): Mom, limo, dancer, tramonto.",
+   "engine": false,
+   "width": 8192,
+   "height": 4096,
+   "frames": {
+    "count": 64,
+    "animations": [
+     "MOM DOWN POSE",
+     "Mom Idle",
+     "Mom Left Pose",
+     "Mom Pose Left",
+     "Mom Up Pose"
+    ],
+    "maxFrameWidth": 672,
+    "maxFrameHeight": 861,
+    "examples": [
+     "MOM DOWN POSE0000",
+     "MOM DOWN POSE0001",
+     "MOM DOWN POSE0002",
+     "MOM DOWN POSE0003",
+     "MOM DOWN POSE0004",
+     "MOM DOWN POSE0005",
+     "MOM DOWN POSE0006",
+     "MOM DOWN POSE0007"
+    ]
+   },
+   "atlasXml": "assets/week4/images/momCar.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (8192x4096), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week4/images/limo/bgLimo.png",
+   "url": "/games/friday-night-funkin/assets/week4/images/limo/bgLimo.png",
+   "name": "bgLimo.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 859505,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 4 (Mommy Mearest): Mom, limo, dancer, tramonto.",
+   "engine": false,
+   "width": 4096,
+   "height": 2048,
+   "frames": {
+    "count": 4,
+    "animations": [
+     "background limo pink"
+    ],
+    "maxFrameWidth": 2218,
+    "maxFrameHeight": 384,
+    "examples": [
+     "background limo pink0000",
+     "background limo pink0001",
+     "background limo pink0002",
+     "background limo pink0003"
+    ]
+   },
+   "atlasXml": "assets/week4/images/limo/bgLimo.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (4096x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week4/images/limo/dumb.png",
+   "url": "/games/friday-night-funkin/assets/week4/images/limo/dumb.png",
+   "name": "dumb.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 47055,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 4 (Mommy Mearest): Mom, limo, dancer, tramonto.",
+   "engine": false,
+   "width": 1280,
+   "height": 720,
+   "reskin": "PNG stesso nome e stesse dimensioni (1280x720)"
+  },
+  {
+   "path": "assets/week4/images/limo/fastCarLol.png",
+   "url": "/games/friday-night-funkin/assets/week4/images/limo/fastCarLol.png",
+   "name": "fastCarLol.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 310592,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 4 (Mommy Mearest): Mom, limo, dancer, tramonto.",
+   "engine": false,
+   "width": 1280,
+   "height": 720,
+   "reskin": "PNG stesso nome e stesse dimensioni (1280x720)"
+  },
+  {
+   "path": "assets/week4/images/limo/limoDancer.png",
+   "url": "/games/friday-night-funkin/assets/week4/images/limo/limoDancer.png",
+   "name": "limoDancer.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 642819,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 4 (Mommy Mearest): Mom, limo, dancer, tramonto.",
+   "engine": false,
+   "width": 2048,
+   "height": 2048,
+   "frames": {
+    "count": 30,
+    "animations": [
+     "bg dancer sketch PINK"
+    ],
+    "maxFrameWidth": 404,
+    "maxFrameHeight": 410,
+    "examples": [
+     "bg dancer sketch PINK0000",
+     "bg dancer sketch PINK0001",
+     "bg dancer sketch PINK0002",
+     "bg dancer sketch PINK0003",
+     "bg dancer sketch PINK0004",
+     "bg dancer sketch PINK0005",
+     "bg dancer sketch PINK0006",
+     "bg dancer sketch PINK0007"
+    ]
+   },
+   "atlasXml": "assets/week4/images/limo/limoDancer.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (2048x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week4/images/limo/limoDrive.png",
+   "url": "/games/friday-night-funkin/assets/week4/images/limo/limoDrive.png",
+   "name": "limoDrive.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 607493,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 4 (Mommy Mearest): Mom, limo, dancer, tramonto.",
+   "engine": false,
+   "width": 2048,
+   "height": 2048,
+   "frames": {
+    "count": 4,
+    "animations": [
+     "Limo stage"
+    ],
+    "maxFrameWidth": 2048,
+    "maxFrameHeight": 646,
+    "examples": [
+     "Limo stage0000",
+     "Limo stage0001",
+     "Limo stage0002",
+     "Limo stage0003"
+    ]
+   },
+   "atlasXml": "assets/week4/images/limo/limoDrive.xml",
+   "reskin": "PNG stesso nome e stesse dimensioni (2048x2048), stesso layout frame dell'XML"
+  },
+  {
+   "path": "assets/week4/images/limo/limoOverlay.png",
+   "url": "/games/friday-night-funkin/assets/week4/images/limo/limoOverlay.png",
+   "name": "limoOverlay.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 946605,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 4 (Mommy Mearest): Mom, limo, dancer, tramonto.",
+   "engine": false,
+   "width": 3262,
+   "height": 1659,
+   "reskin": "PNG stesso nome e stesse dimensioni (3262x1659)"
+  },
+  {
+   "path": "assets/week4/images/limo/limoSunset.png",
+   "url": "/games/friday-night-funkin/assets/week4/images/limo/limoSunset.png",
+   "name": "limoSunset.png",
+   "type": "image",
+   "format": "png",
+   "bytes": 1141336,
+   "screens": [
+    "gameplay"
+   ],
+   "role": "sprite-atlas",
+   "note": "Week 4 (Mommy Mearest): Mom, limo, dancer, tramonto.",
+   "engine": false,
+   "width": 1968,
+   "height": 1313,
+   "reskin": "PNG stesso nome e stesse dimensioni (1968x1313)"
+  }
+ ]
+}

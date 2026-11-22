@@ -1,0 +1,154 @@
+{
+ "screens": [
+  {
+   "id": "title",
+   "name": "Titolo (Girlfriend sugli speaker)",
+   "auto": true,
+   "steps": [],
+   "description": "Logo Friday Night Funkin' che 'pompa' + Girlfriend che balla e la scritta PRESS ENTER TO BEGIN. Arrivi qui automaticamente dopo il caricamento."
+  },
+  {
+   "id": "menu",
+   "name": "Menu principale (STORY MODE / FREEPLAY / DONATE)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500,
+     "expect": "MainMenuState"
+    }
+   ],
+   "description": "Menu giallo con Boyfriend. Naviga con frecce su/giù, conferma con Invio."
+  },
+  {
+   "id": "story",
+   "name": "Story Mode · selezione settimana",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500,
+     "expect": "MainMenuState"
+    },
+    {
+     "k": "Enter",
+     "delay": 4500,
+     "expect": "StoryMenuState"
+    }
+   ],
+   "description": "Selezione settimana (WEEK SCORE in alto, TRACKS a sinistra). Frecce sinistra/destra per cambiare settimana, su/giù per la difficoltà."
+  },
+  {
+   "id": "freeplay",
+   "name": "Freeplay (lista brani)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500,
+     "expect": "MainMenuState"
+    },
+    {
+     "k": "ArrowDown",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 4000,
+     "expect": "FreeplayState"
+    }
+   ],
+   "description": "Lista libera dei brani sbloccati con punteggio personale."
+  },
+  {
+   "id": "gameplay",
+   "name": "Gameplay (Week 1 · Bopeebo · NORMAL)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500,
+     "expect": "MainMenuState"
+    },
+    {
+     "k": "Enter",
+     "delay": 4500,
+     "expect": "StoryMenuState"
+    },
+    {
+     "k": "Enter",
+     "delay": 5000,
+     "expect": "PlayState"
+    }
+   ],
+   "description": "Partita avviata su Week 1 (Bopeebo, difficoltà NORMAL): note che salgono sulle frecce, barra salute, punteggio. Frecce per colpire le note."
+  },
+  {
+   "id": "week6",
+   "name": "Week 6 · selezione (settimana pixel)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500,
+     "expect": "MainMenuState"
+    },
+    {
+     "k": "Enter",
+     "delay": 4500,
+     "expect": "StoryMenuState"
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 4500,
+     "expect": "PlayState"
+    }
+   ],
+   "description": "Cinque frecce destra portano alla settimana 6 (SENPAI) in stile pixel. Alla conferma parte il dialogo dentro la partita: premi Invio per avanzare."
+  },
+  {
+   "id": "gameover",
+   "name": "Game Over (Blue Balls Anthem)",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "Perdi apposta durante una canzone (barra salute vuota): Boyfriend gira la testa e parte la musica di game over. Invio = riprova, ESC = menu."
+  },
+  {
+   "id": "pause",
+   "name": "Pausa (RESUME / RESTART / EXIT TO MENU)",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "ESC durante il gameplay apre la pausa con musica breakfast.mp3."
+  },
+  {
+   "id": "results",
+   "name": "Risultati fine settimana",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "Completando tutte le canzoni di una settimana: schermata 'Week Cleared' con punteggio."
+  }
+ ]
+}

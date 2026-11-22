@@ -1,0 +1,87 @@
+{
+ "screens": [
+  {
+   "id": "title",
+   "name": "Titolo · Press Enter",
+   "auto": true,
+   "steps": [],
+   "description": "Splash rosso di apertura, poi logo CHAINSAW DANCE con Kobeni e Chainsaw Man e la scritta PRESS ENTER. Arrivi qui automaticamente dopo il caricamento (o premi F5 nel browser)."
+  },
+  {
+   "id": "menu",
+   "name": "Menu principale (PLAY! / SETTINGS / SUPPORT / CREDITS)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500
+    }
+   ],
+   "description": "Menu arcade con dancepad a sinistra. Su PLAY! premi Invio. Naviga con frecce/WASD."
+  },
+  {
+   "id": "select",
+   "name": "Selezione dancer & brano",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 2500
+    }
+   ],
+   "description": "CHOOSE A DANCER (frecce sinistra/destra per cambiare dancer) + PICK A SONG! (frecce su/giù per scorrere i brani). A destra i pannelli difficoltà."
+  },
+  {
+   "id": "gameplay",
+   "name": "Gameplay (Bug Thief · Easy Vance)",
+   "auto": false,
+   "steps": [
+    {
+     "k": "Enter",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 2200
+    }
+   ],
+   "description": "Partita avviata con dancer Kobeni e brano Bug Thief in difficoltà Easy Vance: frecce che scendono sul dancepad, barra salute in alto, countdown iniziale."
+  },
+  {
+   "id": "pause",
+   "name": "Pausa (RESUME / RESTART / MENU)",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "Premi ESC durante il gameplay per aprire il menu pausa: RESUME, RESTART, MENU."
+  },
+  {
+   "id": "settings",
+   "name": "Settings (tasti e modalità)",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "Dal menu principale seleziona SETTINGS: configurazione tasti key1/key2/key3, modalità practice/survive, automatizzazione dei set."
+  },
+  {
+   "id": "score",
+   "name": "Risultati / Score screen",
+   "auto": false,
+   "manualOnly": true,
+   "steps": [],
+   "description": "Fine brano: schermata punteggio con conteggio tick, giudizi, applausi o fischi a seconda del risultato."
+  }
+ ]
+}

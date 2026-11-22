@@ -1,0 +1,12 @@
+{
+  "id": "chainsaw-dance",
+  "name": "Chainsaw Dance",
+  "tag": "Rhythm · GameMaker Studio 2",
+  "src": "/games/chainsaw-dance/index.html",
+  "engine": "gamemaker-html5",
+  "description": "Fan-game ritmico ispirato a Chainsaw Man di Tatsuki Fujimoto. Selezioni un dancer, scegli un brano e segui le frecce sul dancepad.",
+  "origin": "mirror offline CrazyGames (chainsaw-dance/3), completato dal CDN chainsaw-dance.game-files.crazygames.com",
+  "cdnBase": "https://chainsaw-dance.game-files.crazygames.com/chainsaw-dance/3",
+  "controls": "Frecce / WASD sul dancepad · Invio per confermare · ESC pausa",
+  "bootDelayMs": 9000
+}

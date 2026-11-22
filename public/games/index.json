@@ -1,0 +1,23 @@
+{
+ "generatedAt": "2026-11-22T14:48:50+00:00",
+ "games": [
+  {
+   "id": "chainsaw-dance",
+   "name": "Chainsaw Dance",
+   "tag": "Rhythm · GameMaker Studio 2",
+   "src": "/games/chainsaw-dance/index.html",
+   "description": "Fan-game ritmico ispirato a Chainsaw Man di Tatsuki Fujimoto. Selezioni un dancer, scegli un brano e segui le frecce sul dancepad.",
+   "assetCount": 41,
+   "manifest": "/games/chainsaw-dance/assets.manifest.json"
+  },
+  {
+   "id": "friday-night-funkin",
+   "name": "Friday Night Funkin'",
+   "tag": "Rhythm · OpenFL / HaxeFlixel",
+   "src": "/games/friday-night-funkin/index.html",
+   "description": "Il gioco ritmo originale di Funkin' Crew (v0.3.0): battaglie musicali a settimane contro Daddy Dearest, Spooky Kids, Pico, Mommy Mearest, Monster, Senpai e Spirit.",
+   "assetCount": 276,
+   "manifest": "/games/friday-night-funkin/assets.manifest.json"
+  }
+ ]
+}
