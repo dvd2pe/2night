@@ -1,2 +1,24 @@
-skills/
+# dipendenze e build
 node_modules/
+.next/
+out/
+
+# logs e file runtime
+*.log
+server.log
+dev.log
+
+# secrets — mai committare il token
+GITHUB_TOKEN.md
+.env
+.env.*
+
+# artefatti sandbox / scaffold
+.zscripts/
+tool-results/
+db/
+examples/
+mini-services/
+
+# sistema
+.DS_Store

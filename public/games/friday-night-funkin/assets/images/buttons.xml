@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="buttons.png">
+	<!-- Created with Adobe Animate version 20.0.0.17400 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="back instance 10000" x="0" y="0" width="294" height="116"/>
+	<SubTexture name="back pressed instance 10000" x="294" y="0" width="299" height="112"/>
+	<SubTexture name="down instance 10000" x="593" y="0" width="146" height="146"/>
+	<SubTexture name="down pressed instance 10000" x="739" y="0" width="150" height="139"/>
+	<SubTexture name="googlePlay instance 10000" x="0" y="146" width="359" height="113"/>
+	<SubTexture name="left instance 10000" x="359" y="146" width="148" height="149"/>
+	<SubTexture name="left pressed instance 10000" x="507" y="146" width="152" height="140"/>
+	<SubTexture name="pause instance 10000" x="659" y="146" width="144" height="145"/>
+	<SubTexture name="pause pressed instance 10000" x="803" y="146" width="149" height="138"/>
+	<SubTexture name="play instance 10000" x="0" y="295" width="294" height="116"/>
+	<SubTexture name="play pressed instance 10000" x="294" y="295" width="299" height="112"/>
+	<SubTexture name="right instance 10000" x="593" y="295" width="145" height="146"/>
+	<SubTexture name="right pressed instance 10000" x="738" y="295" width="150" height="139"/>
+	<SubTexture name="up instance 10000" x="0" y="441" width="145" height="146"/>
+	<SubTexture name="up pressed instance 10000" x="145" y="441" width="150" height="139"/>
+</TextureAtlas>
