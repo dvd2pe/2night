@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0d15">
+  <title>2Night Inspector — Live Preview</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand"><span class="logo">2N</span><span><strong>2Night</strong> <em>Inspector</em><small>LIVE PREVIEW</small></span></div>
+    <nav id="game-tabs" class="game-tabs" aria-label="Seleziona gioco"></nav>
+    <div class="top-actions"><button id="reload-game" title="Ricarica il gioco">↻ Reload</button><button id="fullscreen" title="Schermo intero">⛶ Fullscreen</button><a href="https://github.com/dvd2pe/2night" target="_blank" rel="noopener">GitHub ↗</a></div>
+  </header>
+  <div class="workspace">
+    <aside class="sidebar left">
+      <div class="sideheading"><span>ASSET EXPLORER</span><span id="asset-count"></span></div>
+      <label class="search"><span>⌕</span><input id="asset-search" type="search" placeholder="Cerca sprite, texture, file…" autocomplete="off"></label>
+      <div id="asset-filters" class="filters"></div>
+      <div id="asset-list" class="asset-list"><div class="hint">Caricamento registro…</div></div>
+    </aside>
+    <main id="main-stage" class="main">
+      <div class="scene-toolbar">
+        <label for="screen-select">SCREEN</label><select id="screen-select" aria-label="Schermata"></select><button id="go-screen" class="primary">▶ Vai alla schermata</button>
+        <span id="scene-description" class="scene-description"></span>
+      </div>
+      <div class="stage-tools">
+        <span class="live-dot"></span><span id="stage-mode">GAME LIVE</span>
+        <div class="spacer"></div>
+        <button id="focus-game" title="Invia focus al gioco">⌨ Focus</button>
+        <button id="capture" title="Cattura il canvas corrente">◫ Snapshot / Inspect</button>
+        <button id="exit-inspect" class="hidden">✕ Torna al gioco</button>
+      </div>
+      <div id="stage" class="stage">
+        <iframe id="game-frame" title="Gioco HTML5" allow="autoplay; fullscreen; gamepad" tabindex="0"></iframe>
+        <div id="inspect-layer" class="inspect-layer hidden">
+          <img id="snapshot-img" alt="Snapshot della schermata del gioco" draggable="false">
+          <div id="drawing-surface" class="drawing-surface" role="application" aria-label="Trascina per selezionare un elemento"></div>
+          <div id="selection-box" class="selection-box hidden"></div>
+          <div id="hover-tip" class="hover-tip hidden"></div>
+        </div>
+        <div id="stage-banner" class="stage-banner">Caricamento…</div>
+      </div>
+      <div class="stage-footer">
+        <span id="activity">Pronto</span>
+        <span>INSPECT: trascina un rettangolo, poi associa un asset a destra · ESC per tornare al gioco</span>
+      </div>
+    </main>
+    <aside class="sidebar right">
+      <div class="sideheading"><span>PROPERTIES</span><span id="inspector-kind">—</span></div>
+      <div id="inspector-empty" class="empty-state"><span class="empty-icon">⌖</span><strong>Seleziona un elemento</strong><p>Cerca un asset a sinistra, oppure premi Snapshot / Inspect e trascina sul canvas.</p></div>
+      <div id="inspector-content" class="inspector-content hidden">
+        <div class="property-label">SELECTED ASSET</div>
+        <h2 id="asset-title">—</h2>
+        <p id="asset-path" class="path"></p>
+        <div id="asset-preview" class="asset-preview"></div>
+        <div id="asset-meta" class="properties"></div>
+        <div class="property-label">RESKIN PREVIEW (LOCAL)</div>
+        <label class="file-button">↑ Carica texture sostitutiva<input type="file" id="replacement-file" accept="image/png,image/jpeg,image/webp"></label>
+        <p class="hint">Modifica l'anteprima, non i file originali del gioco. Esporta le annotazioni per salvarle.</p>
+      </div>
+      <div class="panel-separator"></div>
+      <div class="property-label">SCENE ELEMENTS</div>
+      <p id="regions-hint" class="hint">Nessuna regione selezionata.</p>
+      <div id="region-list" class="regions"></div>
+      <button id="export-annotations" class="block-button">↓ Export annotations.json</button>
+      <button id="clear-annotations" class="block-button danger">Cancella annotazioni locali</button>
+    </aside>
+  </div>
+  <footer class="statusbar"><span><span class="status-dot"></span> 2Night Browser Preview</span><span id="footer-game"></span><span class="muted">GitHub Pages · Editor statico</span></footer>
+</div>
+<script src="./app.js" defer></script>
+</body>
+</html>
