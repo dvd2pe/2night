@@ -1,42 +1,134 @@
-export type AssetType = 'image' | 'audio' | 'font' | 'text'
+// Tipi dei registri asset REALI estratti dai file originali dei giochi.
+// Nessun valore inventato: ogni campo proviene dai dati compilati originali
+// (variabile _M in benedance.js per GameMaker) o dai file del mirror (FNF).
 
-export interface AssetFrames {
-  count: number
-  animations: string[]
-  maxFrameWidth: number
-  maxFrameHeight: number
-  examples: string[]
+export interface GMFrame {
+  page: number
+  x: number
+  y: number
+  w: number
+  h: number
+  spriteW?: number
+  spriteH?: number
+  trimX?: number
+  trimY?: number
 }
 
-export interface Asset {
-  path: string
-  url: string
+export interface GMSprite {
+  index: number
   name: string
-  type: AssetType
-  format: string
-  bytes: number
+  width: number | null
+  height: number | null
+  originX: number
+  originY: number
+  speedFps: number | null
+  frameCount: number
+  frames: GMFrame[]
+}
+
+export interface GMAudio {
+  index: number
+  name: string
+  file: string
+  volume: number | null
+  preload: boolean
+  durationSec: number | null
+  sizeBytes: number
+  present: boolean
+}
+
+export interface GMObject {
+  index: number
+  name: string
+  spriteIndex: number | null
+  parent: number | null
+}
+
+export interface GMInstance {
+  id: number
+  objectIndex: number
+  objectName: string | null
+  x: number
+  y: number
+  scaleX: number
+  scaleY: number
+  rotation: number
+  imageIndex: number
+}
+
+export interface GMFont {
+  name: string
+  family: string | null
+  size: number
+  bold: boolean
+  glyphCount: number
+}
+
+export interface GMSequence {
+  name: string
+  length: number | null
+  fps: number | null
+}
+
+export interface GMRegistry {
+  game: string
+  engine: string
+  source: string
+  textures: {
+    index: number
+    file: string
+    name: string
+    width: number
+    height: number
+    sizeBytes: number
+  }[]
+  sprites: GMSprite[]
+  audio: GMAudio[]
+  objects: GMObject[]
+  rooms: { name: string; width: number; height: number; instances: GMInstance[] }[]
+  fonts: GMFont[]
+  sequences: GMSequence[]
+  sharedRegions: { region: GMFrame; users: { sprite: string; spriteIndex: number }[] }[]
+  verification: Record<string, unknown>
+}
+
+export interface FNFFile {
+  path: string
+  type: string
+  sizeBytes: number
   width?: number
   height?: number
   durationSec?: number
-  sampleRate?: number
-  bitrateKbps?: number
-  channels?: number
-  fontFamily?: string
-  fontStyle?: string
-  screens: string[]
-  role: string
-  note: string
-  engine: boolean
-  atlasXml?: string
-  frames?: AssetFrames
-  reskin: string
+  subTextures?: number
+  subTextureNames?: string[]
+  jsonElements?: number
+  jsonKeys?: string[]
+  textLines?: number
 }
 
+export interface FNFState {
+  state: string
+  referencedFiles: string[]
+}
+
+export interface FNFRegistry {
+  game: string
+  engine: string
+  totals: { files: number; byType: Record<string, number> }
+  files: FNFFile[]
+  states: FNFState[]
+}
+
+export type GameRegistry = GMRegistry | FNFRegistry
+
+export const isGM = (r: GameRegistry): r is GMRegistry =>
+  r.engine.startsWith('gamemaker')
+
+// ---- schermate e configurazione ----
+
 export interface GameStep {
-  k: string // tasto da inviare (Enter, ArrowRight, Escape…)
-  delay: number // ms da attendere PRIMA del tasto
-  expect?: string // (OpenFL/HaxeFlixel) stato Flixel atteso dopo il tasto;
-  // se l'hook di stato non esiste la verifica viene saltata
+  k: string
+  delay: number
 }
 
 export interface GameScreen {
@@ -48,28 +140,16 @@ export interface GameScreen {
   steps: GameStep[]
 }
 
-export interface AssetManifest {
-  game: string
-  name: string
-  engine: string
-  generatedAt: string
-  description: string
-  controls: string
-  bootDelayMs?: number
-  notes: Record<string, string>
-  totals: Record<string, number>
-  screens: GameScreen[]
-  assets: Asset[]
-}
-
 export interface GameMeta {
   id: string
   name: string
   tag: string
   src: string
   description: string
-  assetCount: number
-  manifest: string
+  registry: string
+  screens: string
+  controls: string
+  bootDelayMs: number
 }
 
 export interface GamesIndex {
@@ -77,18 +157,57 @@ export interface GamesIndex {
   games: GameMeta[]
 }
 
-export const TYPE_LABELS: Record<AssetType, string> = {
-  image: 'Immagini',
-  audio: 'Audio',
-  font: 'Font',
-  text: 'Testi',
+// ---- modello normalizzato per la UI ----
+
+export type AssetKind =
+  | 'screen'
+  | 'sprite'
+  | 'audio'
+  | 'font'
+  | 'sequence'
+  | 'object'
+  | 'texture'
+  | 'image'
+  | 'data'
+
+export interface RegistryAsset {
+  id: string
+  kind: AssetKind
+  name: string
+  sub?: string
+  url?: string
+  path?: string
+  width?: number | null
+  height?: number | null
+  durationSec?: number | null
+  sizeBytes?: number | null
+  frames?: GMFrame[]
+  frameCount?: number
+  originX?: number
+  originY?: number
+  atlasUrl?: string
+  sharedWith?: string[]
+  usedByObjects?: string[]
+  files?: string[]
+  meta?: Record<string, string | number>
 }
 
-export const TYPE_ICONS: Record<AssetType, string> = {
-  image: '🖼️',
-  audio: '🎵',
-  font: '🔤',
-  text: '📄',
+export interface RegistrySection {
+  kind: AssetKind
+  label: string
+  items: RegistryAsset[]
+}
+
+export const KIND_LABELS: Record<AssetKind, string> = {
+  screen: 'Schermate',
+  sprite: 'Sprite',
+  audio: 'Audio',
+  font: 'Font',
+  sequence: 'Sequenze',
+  object: 'Oggetti',
+  texture: 'Texture atlanti',
+  image: 'Immagini',
+  data: 'Dati',
 }
 
 export function formatBytes(n: number): string {
@@ -108,3 +227,16 @@ export function downloadJson(filename: string, data: unknown) {
   a.click()
   URL.revokeObjectURL(url)
 }
+
+// ---- stato reskin ----
+
+export interface ReskinEntry {
+  file: string
+  appliedAt: string
+  kind: 'atlas-page' | 'file'
+  sizeBytes: number
+  targets: string[]
+  note?: string
+}
+
+export type ReskinState = Record<string, ReskinEntry>

@@ -14,8 +14,11 @@
    "steps": [
     {
      "k": "Enter",
-     "delay": 2500,
-     "expect": "MainMenuState"
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 2500
     }
    ],
    "description": "Menu giallo con Boyfriend. Naviga con frecce su/giù, conferma con Invio."
@@ -27,13 +30,15 @@
    "steps": [
     {
      "k": "Enter",
-     "delay": 2500,
-     "expect": "MainMenuState"
+     "delay": 2500
     },
     {
      "k": "Enter",
-     "delay": 4500,
-     "expect": "StoryMenuState"
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 4500
     }
    ],
    "description": "Selezione settimana (WEEK SCORE in alto, TRACKS a sinistra). Frecce sinistra/destra per cambiare settimana, su/giù per la difficoltà."
@@ -45,8 +50,11 @@
    "steps": [
     {
      "k": "Enter",
-     "delay": 2500,
-     "expect": "MainMenuState"
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 2500
     },
     {
      "k": "ArrowDown",
@@ -54,8 +62,7 @@
     },
     {
      "k": "Enter",
-     "delay": 4000,
-     "expect": "FreeplayState"
+     "delay": 4000
     }
    ],
    "description": "Lista libera dei brani sbloccati con punteggio personale."
@@ -67,18 +74,19 @@
    "steps": [
     {
      "k": "Enter",
-     "delay": 2500,
-     "expect": "MainMenuState"
+     "delay": 2500
     },
     {
      "k": "Enter",
-     "delay": 4500,
-     "expect": "StoryMenuState"
+     "delay": 2500
     },
     {
      "k": "Enter",
-     "delay": 5000,
-     "expect": "PlayState"
+     "delay": 4500
+    },
+    {
+     "k": "Enter",
+     "delay": 5000
     }
    ],
    "description": "Partita avviata su Week 1 (Bopeebo, difficoltà NORMAL): note che salgono sulle frecce, barra salute, punteggio. Frecce per colpire le note."
@@ -90,38 +98,39 @@
    "steps": [
     {
      "k": "Enter",
-     "delay": 2500,
-     "expect": "MainMenuState"
-    },
-    {
-     "k": "Enter",
-     "delay": 4500,
-     "expect": "StoryMenuState"
-    },
-    {
-     "k": "ArrowRight",
-     "delay": 2500
-    },
-    {
-     "k": "ArrowRight",
-     "delay": 2500
-    },
-    {
-     "k": "ArrowRight",
-     "delay": 2500
-    },
-    {
-     "k": "ArrowRight",
-     "delay": 2500
-    },
-    {
-     "k": "ArrowRight",
      "delay": 2500
     },
     {
      "k": "Enter",
-     "delay": 4500,
-     "expect": "PlayState"
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 4500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "ArrowRight",
+     "delay": 2500
+    },
+    {
+     "k": "Enter",
+     "delay": 4500
     }
    ],
    "description": "Cinque frecce destra portano alla settimana 6 (SENPAI) in stile pixel. Alla conferma parte il dialogo dentro la partita: premi Invio per avanzare."

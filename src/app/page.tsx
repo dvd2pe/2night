@@ -1,7 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
+  Download,
   Gamepad2,
   Loader2,
   Maximize2,
@@ -12,9 +13,16 @@ import {
 import { Button } from '@/components/ui/button'
 import { AssetSidebar } from '@/components/asset-sidebar'
 import { AssetInspector } from '@/components/asset-inspector'
-import { Asset, AssetManifest, GameMeta, GamesIndex } from '@/lib/asset-types'
+import {
+  GameRegistry,
+  GameScreen,
+  GamesIndex,
+  RegistryAsset,
+  ReskinState,
+  downloadJson,
+} from '@/lib/asset-types'
+import { normalizeRegistry } from '@/lib/registry'
 
-// Codici DOM/standard: usati dal bridge addEventListener e dal fallback DOM
 const KEY_CODES: Record<string, number> = {
   Enter: 13,
   Escape: 27,
@@ -25,45 +33,28 @@ const KEY_CODES: Record<string, number> = {
   ArrowRight: 39,
 }
 
-// Codici LIME: il canale motore (__openflKeyDown) riceve i KeyCode di lime.ui
-// e OpenFL li converte (es. lime DOWN=1073741905 → OpenFL 40). Passare i codici
-// DOM (40) al canale motore produce un tasto sbagliato: lime 40 = tasto "9".
-// Enter/Escape/Space coincidono (13/27/32), le frecce no.
-const LIME_CODES: Record<string, number> = {
-  Enter: 13,
-  Escape: 27,
-  Space: 32,
-  ArrowUp: 1073741906,
-  ArrowDown: 1073741905,
-  ArrowLeft: 1073741904,
-  ArrowRight: 1073741903,
-}
-
-const limeCodeFor = (key: string): number => {
-  if (LIME_CODES[key] !== undefined) return LIME_CODES[key]
-  // lettere e cifre: lime usa i codici ASCII (A-Z maiuscole, 0-9)
-  if (key.length === 1) return key.toUpperCase().charCodeAt(0)
-  return KEY_CODES[key] ?? 0
-}
-
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 export default function Home() {
-  const [games, setGames] = useState<GameMeta[]>([])
+  const [games, setGames] = useState<GamesIndex['games']>([])
   const [activeId, setActiveId] = useState<string | null>(null)
-  const [manifest, setManifest] = useState<AssetManifest | null>(null)
-  const [selected, setSelected] = useState<Asset | null>(null)
+  const [registry, setRegistry] = useState<GameRegistry | null>(null)
+  const [screens, setScreens] = useState<GameScreen[]>([])
+  const [reskin, setReskin] = useState<ReskinState>({})
+  const [selected, setSelected] = useState<RegistryAsset | null>(null)
   const [showSidebar, setShowSidebar] = useState(true)
   const [showInspector, setShowInspector] = useState(true)
   const [loaded, setLoaded] = useState(false)
   const [navScreen, setNavScreen] = useState<string | null>(null)
   const [navLabel, setNavLabel] = useState<string | null>(null)
+  const [navUrl, setNavUrl] = useState<string | null>(null)
+  const [reloadToken, setReloadToken] = useState(0)
 
   const stageRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const navTokenRef = useRef(0)
 
-  // Carica l'indice dei giochi (generico: nuovi giochi compaiono da soli)
+  // Indice giochi generico: nuovi giochi appaiono aggiungendo una cartella
   useEffect(() => {
     fetch('/games/index.json')
       .then((r) => r.json())
@@ -74,65 +65,99 @@ export default function Home() {
       .catch(() => setGames([]))
   }, [])
 
-  // Manifest asset del gioco attivo
+  // Registro reale + schermate + stato reskin del gioco attivo
   useEffect(() => {
     const game = games.find((g) => g.id === activeId)
     if (!game) return
-    setManifest(null)
+    setRegistry(null)
+    setScreens([])
+    setReskin({})
     setSelected(null)
-    fetch(game.manifest)
-      .then((r) => r.json())
-      .then((m: AssetManifest) => setManifest(m))
-      .catch(() => setManifest(null))
+    const safeJson = async <T,>(url: string, fallback: T): Promise<T> => {
+      try {
+        const r = await fetch(url)
+        if (!r.ok) return fallback
+        return (await r.json()) as T
+      } catch {
+        return fallback
+      }
+    }
+    void (async () => {
+      const [reg, scr, res] = await Promise.all([
+        safeJson<GameRegistry | null>(game.registry, null),
+        safeJson<{ screens: GameScreen[] }>(game.screens, { screens: [] }),
+        safeJson<{ state: ReskinState }>('/api/reskin?game=' + game.id, { state: {} }),
+      ])
+      setRegistry(reg)
+      setScreens(scr.screens ?? [])
+      setReskin(res.state ?? {})
+    })()
   }, [games, activeId])
 
-  // readyState polling: l'evento load dell'iframe può scattare prima
-  // dell'idratazione di React, quindi non è affidabile come listener.
+  const normalized = useMemo(
+    () => (registry ? normalizeRegistry(registry, screens) : null),
+    [registry, screens],
+  )
+
+  // readyState polling: l'evento load può scattare prima dell'idratazione.
+  // Il documento conta solo se è quello del gioco (non about:blank né il
+  // documento precedente): così lo switch non resta "caricamento" eterno.
   useEffect(() => {
     let cancelled = false
     const timer = window.setInterval(() => {
       const frame = iframeRef.current
-      if (frame && frame.contentDocument?.readyState === 'complete') {
-        setLoaded(true)
-        window.clearInterval(timer)
+      try {
+        const doc = frame?.contentDocument
+        if (
+          doc &&
+          doc.location.href.includes('/games/') &&
+          doc.readyState === 'complete'
+        ) {
+          setLoaded(true)
+          window.clearInterval(timer)
+        }
+      } catch {
+        /* navigazione in corso */
       }
     }, 250)
     const fallback = window.setTimeout(() => {
       if (!cancelled) setLoaded(true)
-    }, 9000)
+    }, 12000)
     return () => {
       cancelled = true
       window.clearInterval(timer)
       window.clearTimeout(fallback)
     }
-  }, [activeId])
+  }, [activeId, reloadToken])
 
   const activeGame = games.find((g) => g.id === activeId) ?? null
 
-  const switchGame = useCallback(() => {
-    if (!games.length) return
+  const resetTransient = useCallback(() => {
     navTokenRef.current += 1
     setNavScreen(null)
     setNavLabel(null)
+    setNavUrl(null)
     setSelected(null)
     setLoaded(false)
+    setReloadToken((t) => t + 1)
+  }, [])
+
+  const switchGame = useCallback(() => {
+    if (!games.length) return
+    resetTransient()
     setActiveId((id) => {
       const i = games.findIndex((g) => g.id === id)
       return games[(i + 1) % games.length].id
     })
-  }, [games])
+  }, [games, resetTransient])
 
   const selectGame = useCallback(
     (id: string) => {
       if (id === activeId) return
-      navTokenRef.current += 1
-      setNavScreen(null)
-      setNavLabel(null)
-      setSelected(null)
-      setLoaded(false)
+      resetTransient()
       setActiveId(id)
     },
-    [activeId],
+    [activeId, resetTransient],
   )
 
   const goFullscreen = useCallback(() => {
@@ -142,11 +167,14 @@ export default function Home() {
     else void el.requestFullscreen()
   }, [])
 
-  // Invia un tasto dentro l'iframe del gioco. Canali in ordine di preferenza:
-  // 1. __openflKeyDown/Up: iniezione DIRETTA nel motore OpenFL/lime (patch in
-  //    Funkin.js) — indispensabile per engine che ignorano gli eventi DOM.
-  // 2. __sendKey: bridge addEventListener nell'index.html (GameMaker e altri).
-  // 3. fallback: dispatch standard di KeyboardEvent con keyCode legacy.
+  // Invia un tasto all'iframe: KeyboardEvent DOM standard. Nessuna patch nei
+  // file del gioco: è automazione esterna. Dettagli che contano:
+  //  - si spedisce sul CANVAS (un solo evento che bubble a window/document:
+  //    dispatch multipli creano chiavi doppie);
+  //  - l'iframe deve avere il FOCUS: Flixel (FlxGame.focusLost) scarta gli
+  //    input quando non ce l'ha, quindi il chiamante attende dopo il focus;
+  //  - il KEYUP è ritardato di 250ms: keydown+keyup nello stesso frame fanno
+  //    perdere il "justPressed" a FlxG/GameMaker.
   const dispatchKeyToGame = useCallback((key: string) => {
     const frame = iframeRef.current
     if (!frame?.contentWindow) return
@@ -157,47 +185,6 @@ export default function Home() {
     } catch {
       /* ignora */
     }
-    // 1. canale motore OpenFL — i codici passati devono essere LIME, non DOM
-    try {
-      const eng = w as unknown as {
-        __openflKeyDown?: (win: unknown, code: number, mod: number) => void
-        __openflKeyDownWin?: unknown
-        __openflKeyUp?: (win: unknown, code: number, mod: number) => void
-        __openflKeyUpWin?: unknown
-      }
-      if (
-        typeof eng.__openflKeyDown === 'function' &&
-        typeof eng.__openflKeyUp === 'function' &&
-        eng.__openflKeyDownWin
-      ) {
-        // Il keyup va ritardato di qualche frame: se arriva nello stesso tick
-        // di Flixel cancella lo stato "justPressed" e il tasto viene perso.
-        const lime = limeCodeFor(key)
-        eng.__openflKeyDown(eng.__openflKeyDownWin, lime, 0)
-        w.setTimeout(() => {
-          try {
-            eng.__openflKeyUp(eng.__openflKeyUpWin, lime, 0)
-          } catch {
-            /* ignora */
-          }
-        }, 120)
-        return
-      }
-    } catch {
-      /* motore non pronto: prosegue con i fallback */
-    }
-    // 2. bridge addEventListener
-    try {
-      const bridge = (w as unknown as { __sendKey?: (k: string, c: number) => number })
-        .__sendKey
-      if (typeof bridge === 'function') {
-        const sent = bridge(key, keyCode)
-        if (sent > 0) return
-      }
-    } catch {
-      /* bridge assente: usa il fallback */
-    }
-    // 3. fallback DOM
     const make = (type: string) => {
       const ev = new w.KeyboardEvent(type, {
         key,
@@ -209,165 +196,171 @@ export default function Home() {
       Object.defineProperty(ev, 'which', { get: () => keyCode })
       return ev
     }
-    const fire = (target: EventTarget) => {
-      target.dispatchEvent(make('keydown'))
-      target.dispatchEvent(make('keyup'))
-    }
     try {
-      fire(w)
-      fire(w.document)
       const canvas =
         w.document.querySelector('#canvas') ?? w.document.querySelector('canvas')
-      if (canvas) fire(canvas)
+      const target: Element | Window = canvas ?? w
+      target.dispatchEvent(make('keydown'))
+      window.setTimeout(() => {
+        try {
+          target.dispatchEvent(make('keyup'))
+        } catch {
+          /* ignora */
+        }
+      }, 250)
     } catch {
-      /* iframe cross-origin o game non pronto */
+      /* gioco non pronto */
     }
   }, [])
 
-  // Navigazione automatica: ricarica il gioco e cammina le schermate.
-  // Ogni fase è verificata, non affidata a ritri fissi:
-  //  1. il documento dentro l'iframe deve essere quello NUOVO (URL ?nav=…):
-  //     il vecchio è già "complete" e ingannerebbe il readyState check;
-  //  2. il canale input del motore deve esistere (__openflKeyDown / __sendKey);
-  //  3. boot: se esiste l'hook di stato (__flixelState, patch OpenFL) si
-  //     aspetta il PRIMO stato reale del gioco, altrimenti fallback al
-  //     bootDelayMs fisso del manifest (moti senza hook, es. GameMaker);
-  //  4. ogni step con "expect" verifica lo stato Flixel raggiunto e, se il
-  //     tasto non ha avuto alcun effetto (stato invariato), lo reinviA.
+  // Navigazione automatica alle schermate: ricarica il gioco dalla sua
+  // origine originale, attende il boot reale e riproduce la sequenza di
+  // tasti configurata (tutti i tempi sono espliciti, nessuna inferenza).
   const goToScreen = useCallback(
     async (screenId: string) => {
-      if (!activeGame || !manifest) return
-      const screen = manifest.screens.find((s) => s.id === screenId)
+      if (!activeGame) return
+      const screen = screens.find((s) => s.id === screenId)
       if (!screen || screen.manualOnly) return
       const token = ++navTokenRef.current
       setNavScreen(screenId)
       setNavLabel('Ricarico il gioco…')
       setSelected(null)
+      setNavUrl(`${activeGame.src}?nav=${Date.now()}`)
+      setReloadToken((t) => t + 1)
 
-      const navMark = `nav=${Date.now()}`
-      if (iframeRef.current) iframeRef.current.src = `${activeGame.src}?${navMark}`
-
+      const navMark = `nav=`
       const gameWin = () => iframeRef.current?.contentWindow ?? null
       const aborted = () => token !== navTokenRef.current
-      // stato Flixel corrente (null = hook assente o non OpenFL)
-      const stateOf = (): string | null => {
-        try {
-          const v = (gameWin() as unknown as { __flixelState?: string })?.__flixelState
-          return typeof v === 'string' && v.length > 0 ? v : null
-        } catch {
-          return null
-        }
-      }
-      const waitForState = async (want: string, ms: number): Promise<boolean> => {
-        const deadline = Date.now() + ms
-        while (Date.now() < deadline) {
-          await sleep(250)
-          if (aborted()) return false
-          if (stateOf() === want) return true
-        }
-        return false
-      }
 
-      // 1. nuovo documento caricato (l'URL deve contenere il marchio nav)
+      // 1. nuovo documento del gioco caricato
       let docOk = false
       for (let i = 0; i < 200; i++) {
         await sleep(200)
         if (aborted()) return
         try {
           const w = gameWin()
-          if (w?.location?.href?.includes(navMark) && w.document.readyState === 'complete') {
+          if (
+            w?.location?.href?.includes(navMark) &&
+            w.document.readyState === 'complete'
+          ) {
             docOk = true
             break
           }
         } catch {
-          /* navigazione in corso: si riprova */
+          /* navigazione in corso */
         }
       }
       if (!docOk && aborted()) return
-      await sleep(400)
+      setNavLabel('Attendo il caricamento completo del gioco…')
+
+      // 2. boot reale del gioco. Canvas 2D (GameMaker): verifica passiva dai
+      //    pixel (same-origin, nessuna modifica al gioco). Canvas WebGL
+      //    (HaxeFlixel/OpenFL, illeggibile): attesa fissa configurata.
+      const bootMs = activeGame.bootDelayMs ?? 10000
+      let waited = 2500
+      await sleep(waited)
       if (aborted()) return
-
-      // 2. canale input del motore disponibile
-      for (let i = 0; i < 120; i++) {
-        const w = gameWin() as unknown as Record<string, unknown> | null
-        if (w && (typeof w.__openflKeyDown === 'function' || typeof w.__sendKey === 'function')) break
-        await sleep(250)
-        if (aborted()) return
-      }
-
-      // 3. boot: attende il PRIMO STATO reale del gioco quando l'hook di
-      //    stato esiste (patch OpenFL), altrimenti il ritro fisso del
-      //    manifest. L'hook viene rilevato CON l'attesa, quindi i giochi
-      //    senza hook (es. GameMaker) non pagano nessun tempo extra.
-      const bootMs = manifest.bootDelayMs ?? 3000
-      const hasHook = (): boolean => {
+      const minWait = Math.min(bootMs - 1000, 8000)
+      await sleep(minWait)
+      waited += minWait
+      if (aborted()) return
+      let alive = false
+      const probeDeadline = Date.now() + 9000
+      while (Date.now() < probeDeadline && !alive) {
         try {
-          const w = gameWin() as unknown as { __flixelStateAt?: unknown }
-          return w?.__flixelStateAt !== undefined // pre-dichiarato dalla patch
+          const w = gameWin()
+          const c = w?.document.querySelector('canvas')
+          const ctx2d = c?.getContext('2d') ?? null
+          if (c && ctx2d) {
+            const probe = w.document.createElement('canvas')
+            probe.width = 32
+            probe.height = 18
+            const p = probe.getContext('2d')
+            p.drawImage(c, 0, 0, 32, 18)
+            const d = p.getImageData(0, 0, 32, 18).data
+            let sum = 0
+            for (let i = 0; i < d.length; i += 4) sum += d[i] + d[i + 1] + d[i + 2]
+            if (sum > 0) alive = true
+          }
         } catch {
-          return false
+          /* campionamento non possibile */
+        }
+        if (!alive) {
+          await sleep(600)
+          waited += 600
+          if (aborted()) return
         }
       }
-      setNavLabel('Attendo il primo schermo di gioco…')
-      const bootDeadline = Date.now() + Math.round(bootMs * 1.8) + 15000
-      const fixedDeadline = Date.now() + bootMs
-      let hook = hasHook()
-      while (Date.now() < bootDeadline) {
-        await sleep(300)
+      if (!alive) {
+        // canvas WebGL o non leggibile: completa l'attesa configurata
+        const rest = Math.max(0, bootMs - waited)
+        await sleep(rest)
+        waited += rest
         if (aborted()) return
-        if (!hook && hasHook()) hook = true
-        if (stateOf() !== null) break // primo stato creato (hook attivo)
-        if (!hook && Date.now() >= fixedDeadline) break // nessun hook: ritro fisso
       }
-      await sleep(1500)
+      await sleep(1200)
+      waited += 1200
       if (aborted()) return
 
-      // 4. step con verifica dello stato e retry quando il tasto viene ignorato
+      // 3. sequenza tasti della schermata (configurazione esplicita)
       const steps = screen.steps ?? []
       for (let i = 0; i < steps.length; i++) {
         const st = steps[i]
-        setNavLabel(`Passo ${i + 1}/${steps.length}: ${st.k}`)
+        setNavLabel(
+          `Passo ${i + 1}/${steps.length}: ${st.k} tra ${Math.round(st.delay / 1000)}s`,
+        )
         await sleep(st.delay)
         if (aborted()) return
-        const stateBefore = stateOf()
-        dispatchKeyToGame(st.k)
-        if (st.expect && stateBefore !== null) {
-          // Il primo Invio su TitleState puo' solo SKIPPARE l'intro (FNF):
-          // se lo stato non cambia si reinvia finche' l'engine reagisce o
-          // si esauriscono i tentativi (copre anche boot lenti / buffering).
-          let ok = await waitForState(st.expect, 3500)
-          if (aborted()) return
-          let attempt = 0
-          while (!ok && attempt < 4 && stateOf() === stateBefore) {
-            attempt++
-            setNavLabel(`Passo ${i + 1}: riprovo ${st.k} (${attempt})`)
-            dispatchKeyToGame(st.k)
-            ok = await waitForState(st.expect, 4000)
-            if (aborted()) return
-          }
-        } else {
-          await sleep(800)
-          if (aborted()) return
+        setNavLabel(`Passo ${i + 1}/${steps.length}: invio ${st.k}`)
+        // focus + assestamento: Flixel scarta gli input se l'iframe non è
+        // focalizzato, e l'evento di focus richiede un frame per valere
+        try {
+          gameWin()?.focus()
+        } catch {
+          /* ignora */
         }
+        await sleep(450)
+        if (aborted()) return
+        dispatchKeyToGame(st.k)
+        await sleep(600)
+        if (aborted()) return
       }
       setNavLabel(null)
       window.setTimeout(() => {
         if (navTokenRef.current === token) setNavScreen(null)
-      }, 1500)
+      }, 1200)
     },
-    [activeGame, manifest, dispatchKeyToGame],
+    [activeGame, screens, dispatchKeyToGame],
   )
 
-  const onSelectAsset = useCallback((a: Asset) => {
+  const refreshReskin = useCallback(() => {
+    if (!activeGame) return
+    fetch('/api/reskin?game=' + activeGame.id)
+      .then((r) => r.json())
+      .then((d: { state: ReskinState }) => setReskin(d.state ?? {}))
+      .catch(() => undefined)
+  }, [activeGame])
+
+  const onSelectAsset = useCallback((a: RegistryAsset) => {
     setSelected(a)
     setShowInspector(true)
   }, [])
 
+  const exportFiltered = useCallback(() => {
+    if (!normalized || !activeGame) return
+    downloadJson(`${activeGame.id}-registro.json`, {
+      game: activeGame.id,
+      registry,
+      screens,
+      reskin,
+    })
+  }, [normalized, activeGame, registry, screens, reskin])
+
   const loadingVisible = !loaded || navScreen !== null
+  const iframeSrc = navUrl ?? activeGame?.src ?? undefined
 
   return (
     <div className="flex h-[100dvh] min-h-0 flex-col bg-zinc-950 text-zinc-100">
-      {/* Barra superiore */}
       <header className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-zinc-800 bg-zinc-900/80 px-3 py-2.5 backdrop-blur">
         <div className="flex items-center gap-2">
           <Button
@@ -386,11 +379,10 @@ export default function Home() {
           </Button>
           <Gamepad2 className="h-6 w-6 text-red-500" aria-hidden="true" />
           <span className="text-lg font-bold tracking-tight">
-            2Night <span className="text-zinc-400">Assets</span>
+            2Night <span className="text-zinc-400">Inspector</span>
           </span>
         </div>
 
-        {/* Selettore giochi */}
         <div className="flex flex-1 flex-wrap items-center justify-center gap-2">
           {games.map((g) => (
             <button
@@ -419,22 +411,32 @@ export default function Home() {
           </Button>
         </div>
 
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={goFullscreen}
-          aria-label="Schermo intero"
-          title="Schermo intero"
-          className="h-9 w-9 border-zinc-700 bg-zinc-800/60 text-zinc-300 hover:bg-zinc-700 hover:text-white"
-        >
-          <Maximize2 className="h-5 w-5" aria-hidden="true" />
-        </Button>
+        <div className="flex items-center gap-2">
+          {registry && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportFiltered}
+              className="h-9 gap-1.5 border-zinc-700 bg-zinc-800/60 text-xs text-zinc-300 hover:bg-zinc-700"
+            >
+              <Download className="h-3.5 w-3.5" /> Export JSON
+            </Button>
+          )}
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={goFullscreen}
+            aria-label="Schermo intero"
+            title="Schermo intero"
+            className="h-9 w-9 border-zinc-700 bg-zinc-800/60 text-zinc-300 hover:bg-zinc-700 hover:text-white"
+          >
+            <Maximize2 className="h-5 w-5" aria-hidden="true" />
+          </Button>
+        </div>
       </header>
 
-      {/* Corpo a tre colonne */}
       <div className="flex min-h-0 flex-1">
-        {/* Sidebar asset */}
-        {manifest && showSidebar && (
+        {normalized && showSidebar && (
           <>
             <div
               className="fixed inset-0 z-30 bg-black/60 lg:hidden"
@@ -443,7 +445,9 @@ export default function Home() {
             />
             <div className="fixed inset-y-0 left-0 z-40 w-[300px] lg:static lg:z-auto lg:w-[300px] lg:shrink-0">
               <AssetSidebar
-                manifest={manifest}
+                gameId={activeGame?.id ?? ''}
+                gameName={activeGame?.name ?? ''}
+                normalized={normalized}
                 selected={selected}
                 onSelect={onSelectAsset}
                 onClose={() => setShowSidebar(false)}
@@ -452,13 +456,12 @@ export default function Home() {
           </>
         )}
 
-        {/* Stage di gioco */}
         <main ref={stageRef} className="relative min-w-0 flex-1 bg-black">
-          {activeGame && (
+          {activeGame && iframeSrc && (
             <iframe
-              key={activeId}
+              key={`${activeId}-${reloadToken}`}
               ref={iframeRef}
-              src={activeGame.src}
+              src={iframeSrc}
               title={activeGame.name}
               className="absolute inset-0 h-full w-full border-0"
               allow="fullscreen; autoplay; gamepad"
@@ -471,23 +474,18 @@ export default function Home() {
             >
               <Loader2 className="h-10 w-10 animate-spin text-red-500" />
               <p className="max-w-xs text-center text-sm text-zinc-300">
-                {navLabel ??
-                  `Caricamento ${activeGame?.name ?? 'gioco'}…`}
+                {navLabel ?? `Caricamento ${activeGame?.name ?? 'gioco'}…`}
               </p>
-              {navScreen && manifest && (
+              {navScreen && (
                 <p className="text-xs text-zinc-500">
-                  {
-                    manifest.screens.find((s) => s.id === navScreen)?.name ??
-                      ''
-                  }
+                  {screens.find((s) => s.id === navScreen)?.name ?? ''}
                 </p>
               )}
             </div>
           )}
         </main>
 
-        {/* Inspector */}
-        {selected && manifest && showInspector && (
+        {selected && registry && showInspector && (
           <>
             <div
               className="fixed inset-0 z-30 bg-black/60 xl:hidden"
@@ -497,9 +495,12 @@ export default function Home() {
             <div className="fixed inset-y-0 right-0 z-40 w-[340px] xl:static xl:z-auto xl:w-[340px] xl:shrink-0">
               <AssetInspector
                 asset={selected}
-                manifest={manifest}
+                registry={registry}
+                screens={screens}
+                reskin={reskin}
                 navigating={navScreen}
-                onGoToScreen={goToScreen}
+                onGoToScreen={(id) => void goToScreen(id)}
+                onReskinChanged={refreshReskin}
                 onClose={() => {
                   setShowInspector(false)
                   setSelected(null)
@@ -510,15 +511,15 @@ export default function Home() {
         )}
       </div>
 
-      {/* Info gioco attivo */}
       <div className="flex items-center justify-between gap-2 border-t border-zinc-800 px-4 py-1.5 text-xs text-zinc-500">
         <span className="truncate">
           {activeGame?.name} <span className="text-zinc-700">·</span>{' '}
-          {manifest?.controls || activeGame?.tag}
+          {activeGame?.controls}
         </span>
-        {manifest && (
+        {normalized && (
           <span className="hidden shrink-0 sm:inline">
-            {manifest.assets.length} asset · {manifest.screens.length} schermate
+            {normalized.totalItems} elementi registro · {screens.length}{' '}
+            schermate · file originali
           </span>
         )}
       </div>

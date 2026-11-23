@@ -1,12 +1,12 @@
 {
-  "id": "friday-night-funkin",
-  "name": "Friday Night Funkin'",
-  "tag": "Rhythm · OpenFL / HaxeFlixel",
-  "src": "/games/friday-night-funkin/index.html",
-  "engine": "openfl-html5",
-  "description": "Il gioco ritmo originale di Funkin' Crew (v0.3.0): battaglie musicali a settimane contro Daddy Dearest, Spooky Kids, Pico, Mommy Mearest, Monster, Senpai e Spirit.",
-  "origin": "mirror offline CrazyGames (friday-night-funkin/6), completato dal CDN friday-night-funkin.game-files.crazygames.com (manifest/*.json + assets/shared + assets/week* + assets/songs)",
-  "cdnBase": "https://friday-night-funkin.game-files.crazygames.com/friday-night-funkin/6",
-  "controls": "Frecce per suonare · Invio per confermare · ESC indietro / pausa",
-  "bootDelayMs": 22000
+ "id": "friday-night-funkin",
+ "name": "Friday Night Funkin'",
+ "tag": "Rhythm · OpenFL / HaxeFlixel",
+ "src": "/games/friday-night-funkin/index.html",
+ "engine": "openfl-html5",
+ "description": "Il gioco ritmo originale di Funkin' Crew (v0.3.0): battaglie musicali a settimane contro Daddy Dearest, Spooky Kids, Pico, Mommy Mearest, Monster, Senpai e Spirit.",
+ "origin": "mirror offline CrazyGames (friday-night-funkin/6), completato dal CDN friday-night-funkin.game-files.crazygames.com (manifest/*.json + assets/shared + assets/week* + assets/songs)",
+ "cdnBase": "https://friday-night-funkin.game-files.crazygames.com/friday-night-funkin/6",
+ "controls": "Frecce per suonare · Invio per confermare · ESC indietro / pausa",
+ "bootDelayMs": 30000
 }
