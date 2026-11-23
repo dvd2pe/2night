@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.github
+*.zip
+.env
+.env.*
+GITHUB_TOKEN.md
+token.txt
+*.log
+*.db
+*.sqlite
+*.sqlite3
+download/
+.zscripts/
+tool-results/
