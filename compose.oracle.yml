@@ -1,0 +1,43 @@
+# Deployment: docker compose -f compose.oracle.yml up -d --build
+# The app is private behind Caddy Basic Auth. Do not publish port 3000.
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      PYTHON_BIN: /usr/bin/python3
+    expose:
+      - "3000"
+    volumes:
+      # Reskins and lazy _original backups survive container rebuilds.
+      - ./public/games:/app/public/games
+    security_opt:
+      - no-new-privileges:true
+
+  proxy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - app
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set APP_DOMAIN in .env}
+      AUTH_USER: ${AUTH_USER:?Set AUTH_USER in .env}
+      AUTH_HASH: ${AUTH_HASH:?Set AUTH_HASH in .env}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  caddy_data:
+  caddy_config:
