@@ -1,0 +1,53 @@
+name: 2Night Live Preview (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'preview/**'
+      - 'public/games/**'
+      - '.github/workflows/preview-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 2night-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout 2Night
+        uses: actions/checkout@v4
+      - name: Build static preview with both HTML5 games
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          cp preview/index.html preview/app.js preview/style.css _site/
+          cp -a public/games _site/games
+          touch _site/.nojekyll
+          test -s _site/games/index.json
+          test -s _site/games/chainsaw-dance/index.html
+          test -s _site/games/friday-night-funkin/index.html
+          echo "Preview files: $(find _site -type f | wc -l)"
+          du -sh _site
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Publish permanent URL
+        id: deployment
+        uses: actions/deploy-pages@v4
