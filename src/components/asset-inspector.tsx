@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   AlertTriangle,
+  Camera,
   ExternalLink,
   Hammer,
   Loader2,
@@ -15,9 +16,9 @@ import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   FNFRegistry,
+  GMFrame,
   GMRegistry,
   GameRegistry,
-  GameScreen,
   RegistryAsset,
   ReskinState,
   downloadJson,
@@ -28,25 +29,14 @@ import {
 interface Props {
   asset: RegistryAsset
   registry: GameRegistry
-  screens: GameScreen[]
   reskin: ReskinState
-  navigating: string | null
-  onGoToScreen: (screenId: string) => void
+  onInspectAsset: () => void
+  onReloadGame: () => void
   onReskinChanged: () => void
   onClose: () => void
 }
 
 type ScaleMode = 'stretch' | 'nearest'
-
-const KEY_LABELS: Record<string, string> = {
-  Enter: 'Invio',
-  Escape: 'ESC',
-  Space: 'Spazio',
-  ArrowUp: 'freccia su',
-  ArrowDown: 'freccia giù',
-  ArrowLeft: 'freccia sx',
-  ArrowRight: 'freccia dx',
-}
 
 async function fileToImage(file: File): Promise<HTMLImageElement> {
   const url = URL.createObjectURL(file)
@@ -82,21 +72,23 @@ function scaleImage(
 export function AssetInspector({
   asset,
   registry,
-  screens,
   reskin,
-  navigating,
-  onGoToScreen,
+  onInspectAsset,
+  onReloadGame,
   onReskinChanged,
   onClose,
 }: Props) {
   const [textContent, setTextContent] = useState<string | null>(null)
+  const [appliedFlash, setAppliedFlash] = useState(false)
   const [busy, setBusy] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [replaceOn, setReplaceOn] = useState(false)
   const [replaceFile, setReplaceFile] = useState<File | null>(null)
   const [scaleMode, setScaleMode] = useState<ScaleMode>('stretch')
   const [allFrames, setAllFrames] = useState(false)
+  const [alsoDuplicates, setAlsoDuplicates] = useState(true)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [xmlFrames, setXmlFrames] = useState<GMFrame[] | null>(null)
   const fileInput = useRef<HTMLInputElement>(null)
 
   const gm = isGM(registry)
@@ -110,27 +102,65 @@ export function AssetInspector({
     setReplaceFile(null)
     setPreviewUrl(null)
     setError(null)
+    setXmlFrames(null)
     if (asset.kind !== 'data') {
       setTextContent(null)
-      return
-    }
-    let alive = true
-    if (asset.url) {
+    } else if (asset.url) {
+      let alive = true
       fetch(asset.url)
         .then((r) => (r.ok ? r.text() : ''))
         .then((t) => alive && setTextContent(t.slice(0, 2000)))
         .catch(() => alive && setTextContent(null))
+      return () => {
+        alive = false
+      }
     }
+  }, [asset])
+
+  // Sheet FNF (formato Sparrow): i rect dei frame sono nel file .xml
+  // originale accanto al png — gli stessi dati usati dal gioco.
+  useEffect(() => {
+    setXmlFrames(null)
+    if (asset.kind !== 'image' || !asset.url) return
+    let alive = true
+    fetch(`${asset.url}.xml`)
+      .then((r) => (r.ok ? r.text() : null))
+      .then((t) => {
+        if (!t || !alive) return
+        const frames: GMFrame[] = []
+        const re =
+          /<SubTexture[^>]*name="([^"]+)"[^>]*?x="(\d+)"[^>]*?y="(\d+)"[^>]*?width="(\d+)"[^>]*?height="(\d+)"/g
+        for (const m of t.matchAll(re)) {
+          frames.push({ page: 0, x: +m[2], y: +m[3], w: +m[4], h: +m[5] })
+        }
+        if (frames.length) setXmlFrames(frames)
+      })
+      .catch(() => undefined)
     return () => {
       alive = false
     }
   }, [asset])
 
+  // frame dell'atlante: sprite GameMaker (registro _M) o frame Sparrow FNF
+  const atlasFrames: GMFrame[] | null =
+    asset.kind === 'sprite'
+      ? (asset.frames ?? null)
+      : asset.kind === 'image' && xmlFrames
+        ? xmlFrames
+        : null
+  const atlasPagePath =
+    asset.kind === 'sprite'
+      ? (asset.atlasUrl?.replace(`/games/${registry.game}/`, '') ?? null)
+      : asset.kind === 'image'
+        ? (asset.path ?? null)
+        : null
+
   const framePreview = useMemo(() => {
-    if (asset.kind !== 'sprite' || !asset.frames?.length || !asset.atlasUrl)
-      return null
-    return { frame: asset.frames[0], atlasUrl: asset.atlasUrl }
-  }, [asset])
+    if (!atlasFrames?.length) return null
+    const url = asset.atlasUrl ?? asset.url
+    if (!url) return null
+    return { frame: atlasFrames[0], atlasUrl: url }
+  }, [atlasFrames, asset.atlasUrl, asset.url])
 
   // applicazione reskin: sprite atlante (composizione pagina) o file diretto
   const applyReskin = async () => {
@@ -141,12 +171,22 @@ export function AssetInspector({
     setError(null)
     setBusy('applico…')
     try {
-      if (asset.kind === 'sprite' && asset.frames?.length) {
+      if (atlasFrames?.length && atlasPagePath) {
         // composizione della pagina atlante con i rect originali
-        const targets = allFrames
-          ? asset.frames
-          : [asset.frames[0]].filter(Boolean)
-        const pageUrl = `${asset.atlasUrl}${cacheTag(asset.atlasUrl?.split('/').pop())}`
+        const targets = allFrames ? atlasFrames : [atlasFrames[0]].filter(Boolean)
+        // copie pixel-identiche della stessa immagine nell'atlante
+        // (misura dall'hash dei crop: es. gametitle ↔ chainsawTitle)
+        const dupRects: GMFrame[] = []
+        const dupNames = new Set<string>()
+        if (alsoDuplicates && asset.identicalRects?.length) {
+          for (const d of asset.identicalRects) {
+            if (!dupRects.some((r) => r.x === d.x && r.y === d.y && r.page === d.page)) {
+              dupRects.push(d)
+              dupNames.add(d.sprite)
+            }
+          }
+        }
+        const pageUrl = `${asset.atlasUrl ?? asset.url}${cacheTag(atlasPagePath)}`
         const pageImg = new Image()
         await new Promise<void>((res, rej) => {
           pageImg.onload = () => res()
@@ -163,6 +203,10 @@ export function AssetInspector({
           const scaled = scaleImage(repl, f.w, f.h, scaleMode)
           ctx.drawImage(scaled, f.x, f.y)
         }
+        for (const f of dupRects) {
+          const scaled = scaleImage(repl, f.w, f.h, scaleMode)
+          ctx.drawImage(scaled, f.x, f.y)
+        }
         const png: Blob = await new Promise((res, rej) =>
           canvas.toBlob((b) => (b ? res(b) : rej(new Error('export fallito'))), 'image/png'),
         )
@@ -171,7 +215,7 @@ export function AssetInspector({
           fr.onload = () => res(fr.result as string)
           fr.readAsDataURL(png)
         })
-        const pagePath = asset.atlasUrl!.replace(`/games/${registry.game}/`, '')
+        const pagePath = atlasPagePath
         const r = await fetch('/api/reskin', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
@@ -180,15 +224,19 @@ export function AssetInspector({
             action: 'applyAtlas',
             page: pagePath,
             png: dataUrl,
-            targets: [asset.name],
+            targets: [asset.name, ...[...dupNames]],
           }),
         })
         if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error ?? 'errore server')
       } else if (asset.kind === 'audio' || asset.kind === 'image' || asset.kind === 'texture' || asset.kind === 'font') {
         if (!asset.path) throw new Error('questo asset non ha un file sostituibile')
-        // controllo dimensioni reali per le immagini
+        // controllo dimensioni reali per le immagini DIRETTE (senza frame xml)
         let dataUrl: string
-        if (asset.path.endsWith('.png') && asset.width && asset.height) {
+        if (
+          asset.path.endsWith('.png') &&
+          asset.width && asset.height &&
+          !atlasFrames?.length
+        ) {
           const img = await fileToImage(replaceFile)
           if (img.naturalWidth !== asset.width || img.naturalHeight !== asset.height) {
             const scaled = scaleImage(
@@ -231,6 +279,8 @@ export function AssetInspector({
       setReplaceFile(null)
       setPreviewUrl(null)
       onReskinChanged()
+      setAppliedFlash(true)
+      window.setTimeout(() => setAppliedFlash(false), 6000)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'errore sconosciuto')
     } finally {
@@ -259,9 +309,6 @@ export function AssetInspector({
       setBusy(null)
     }
   }
-
-  const screenId = asset.meta?.screenId as string | undefined
-  const screen = screenId ? screens.find((s) => s.id === screenId) : undefined
 
   // blueprint della room GameMaker: istanze alle posizioni originali
   const roomInstances = useMemo(() => {
@@ -524,37 +571,42 @@ export function AssetInspector({
             </div>
           )}
 
-          {/* Navigazione schermata */}
-          {screen && (
-            <div className="rounded-lg border border-zinc-800 bg-zinc-800/40 p-2.5">
-              <p className="text-xs font-bold text-zinc-200">{screen.name}</p>
-              <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
-                {screen.description}
+          {/* Ispezione sulla schermata fissa (stile DevTools) */}
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/10 p-2.5">
+            <p className="text-xs font-bold text-sky-200">Ispezione sulla schermata</p>
+            <p className="mt-1 text-[11px] leading-relaxed text-zinc-400">
+              Fissa la schermata attuale del gioco e cerca questo elemento con
+              confronto pixel esatto: trovi il box con posizione e dimensioni,
+              come l'inspector di Chrome.
+            </p>
+            <Button
+              size="sm"
+              className="mt-2 h-8 w-full bg-sky-600 text-xs font-bold text-white hover:bg-sky-500"
+              onClick={onInspectAsset}
+            >
+              <Camera className="mr-1 h-3 w-3" /> fissa la schermata e cercalo
+            </Button>
+          </div>
+
+          {/* reskin applicato: ricarica per vederlo nel gioco */}
+          {(appliedFlash || reskinEntry) && (
+            <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-2.5">
+              <p className="text-xs font-bold text-emerald-200">
+                Reskin applicato ai file del mirror{reskinEntry ? ` · ${new Date(reskinEntry.appliedAt).toLocaleString('it-IT')}` : ''}
               </p>
-              {!screen.auto && (
-                <p className="mt-1 text-[11px] text-zinc-400">
-                  Percorso:{' '}
-                  {screen.steps
-                    .map((st) => KEY_LABELS[st.k] ?? st.k)
-                    .join(' → ')}
-                </p>
-              )}
-              {!screen.manualOnly && (
-                <Button
-                  size="sm"
-                  className="mt-2 h-8 w-full bg-red-600 text-xs font-bold text-white hover:bg-red-500"
-                  disabled={navigating !== null}
-                  onClick={() => onGoToScreen(screenId!)}
-                >
-                  {navigating === screenId ? (
-                    <>
-                      <Loader2 className="mr-1 h-3 w-3 animate-spin" /> navigo…
-                    </>
-                  ) : (
-                    'vai alla schermata'
-                  )}
-                </Button>
-              )}
+              <p className="mt-1 text-[11px] leading-relaxed text-zinc-400">
+                Ricarica il gioco, torna alla schermata dove appare l'elemento e
+                premi «Ispeziona»: la schermata fissa mostrerà il nuovo aspetto
+                accanto a quella precedente.
+              </p>
+              <Button
+                size="sm"
+                variant="outline"
+                className="mt-2 h-8 w-full border-emerald-500/50 bg-emerald-500/10 text-xs font-bold text-emerald-200 hover:bg-emerald-500/20"
+                onClick={onReloadGame}
+              >
+                <RotateCcw className="mr-1 h-3 w-3" /> ricarica il gioco
+              </Button>
             </div>
           )}
 
@@ -606,6 +658,19 @@ export function AssetInspector({
                         className="h-3.5 w-3.5 accent-red-500"
                       />
                       applica a tutti i {asset.frameCount} frame
+                    </label>
+                  )}
+                  {asset.identicalRects && asset.identicalRects.length > 0 && (
+                    <label className="flex items-center gap-2 text-[11px] text-zinc-300">
+                      <input
+                        type="checkbox"
+                        checked={alsoDuplicates}
+                        onChange={(e) => setAlsoDuplicates(e.target.checked)}
+                        className="h-3.5 w-3.5 accent-red-500"
+                      />
+                      sostituisci anche le {asset.identicalRects.length} copie
+                      pixel-identiche (
+                      {[...new Set(asset.identicalRects.map((d) => d.sprite))].join(', ')})
                     </label>
                   )}
                   <label className="block text-[11px] text-zinc-400">

@@ -7,6 +7,18 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+  async headers() {
+    return [
+      {
+        // gli asset dei giochi rispecchiati non devono mai finire in cache:
+        // il reskin riscrive i file su disco e il gioco deve rileggerli.
+        source: "/games/:path*",
+        headers: [
+          { key: "Cache-Control", value: "no-store, must-revalidate" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

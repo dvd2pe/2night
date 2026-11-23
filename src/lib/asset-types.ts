@@ -89,6 +89,7 @@ export interface GMRegistry {
   fonts: GMFont[]
   sequences: GMSequence[]
   sharedRegions: { region: GMFrame; users: { sprite: string; spriteIndex: number }[] }[]
+  identicalRects?: Record<string, (GMFrame & { sprite: string })[]>
   verification: Record<string, unknown>
 }
 
@@ -187,6 +188,7 @@ export interface RegistryAsset {
   originY?: number
   atlasUrl?: string
   sharedWith?: string[]
+  identicalRects?: (GMFrame & { sprite: string })[]
   usedByObjects?: string[]
   files?: string[]
   meta?: Record<string, string | number>

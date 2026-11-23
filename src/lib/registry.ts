@@ -5,7 +5,6 @@ import {
   GMFrame,
   GMRegistry,
   GameRegistry,
-  GameScreen,
   RegistryAsset,
   RegistrySection,
   isGM,
@@ -29,7 +28,7 @@ const KIND_ORDER: AssetKind[] = [
   'data',
 ]
 
-function normalizeGM(reg: GMRegistry, screens: GameScreen[]): NormalizedGame {
+function normalizeGM(reg: GMRegistry): NormalizedGame {
   const base = `/games/${reg.game}`
 
   // oggetti che usano ogni sprite (dati reali: object._32 -> sprite index)
@@ -85,6 +84,7 @@ function normalizeGM(reg: GMRegistry, screens: GameScreen[]): NormalizedGame {
       originY: s.originY,
       atlasUrl: first ? textureUrl(first.page) : undefined,
       sharedWith: [...shared],
+      identicalRects: reg.identicalRects?.[s.name],
       usedByObjects: users,
     }
   })
@@ -168,16 +168,6 @@ function normalizeGM(reg: GMRegistry, screens: GameScreen[]): NormalizedGame {
     { kind: 'texture', label: 'Texture atlanti', items: texItems },
   ]
 
-  // aggancio anche le schermate navigabili (screens.json) come item virtuali
-  const navScreens: RegistryAsset[] = screens.map((s) => ({
-    id: `nav:${s.id}`,
-    kind: 'screen',
-    name: s.name,
-    sub: s.auto ? 'schermata di avvio' : `${s.steps.length} passi da tastiera`,
-    meta: { screenId: s.id },
-  }))
-  sections[0].items = [...navScreens, ...roomItems]
-
   return {
     sections,
     totalItems: sections.reduce((n, s) => n + s.items.length, 0),
@@ -191,20 +181,13 @@ function folderOf(path: string): string {
   return parts.slice(0, parts.length - 1).join('/')
 }
 
-function normalizeFNF(reg: FNFRegistry, screens: GameScreen[]): NormalizedGame {
+function normalizeFNF(reg: FNFRegistry): NormalizedGame {
   const base = `/games/${reg.game}`
   const CODE_EXT = new Set(['js', 'html'])
 
   const files = reg.files.filter((f) => !CODE_EXT.has(f.type))
 
-  // schermate navigabili + stati del codice con asset referenziati reali
-  const navScreens: RegistryAsset[] = screens.map((s) => ({
-    id: `nav:${s.id}`,
-    kind: 'screen',
-    name: s.name,
-    sub: s.auto ? 'schermata di avvio' : `${s.steps.length} passi da tastiera`,
-    meta: { screenId: s.id },
-  }))
+  // stati del codice con asset referenziati reali
   const stateItems: RegistryAsset[] = reg.states
     .filter((s) => !s.state.startsWith('flixel_') && !s.state.startsWith('openfl_'))
     .map((s) => ({
@@ -257,7 +240,7 @@ function normalizeFNF(reg: FNFRegistry, screens: GameScreen[]): NormalizedGame {
     {
       kind: 'screen',
       label: 'Schermate e stati',
-      items: [...navScreens, ...stateItems],
+      items: stateItems,
     },
     ...folderSections,
   ]
@@ -269,9 +252,6 @@ function normalizeFNF(reg: FNFRegistry, screens: GameScreen[]): NormalizedGame {
   }
 }
 
-export function normalizeRegistry(
-  reg: GameRegistry,
-  screens: GameScreen[],
-): NormalizedGame {
-  return isGM(reg) ? normalizeGM(reg, screens) : normalizeFNF(reg, screens)
+export function normalizeRegistry(reg: GameRegistry): NormalizedGame {
+  return isGM(reg) ? normalizeGM(reg) : normalizeFNF(reg)
 }

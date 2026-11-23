@@ -6,6 +6,7 @@ import {
   Gamepad2,
   Loader2,
   Maximize2,
+  MousePointerClick,
   PanelLeftClose,
   PanelLeftOpen,
   Repeat,
@@ -13,6 +14,11 @@ import {
 import { Button } from '@/components/ui/button'
 import { AssetSidebar } from '@/components/asset-sidebar'
 import { AssetInspector } from '@/components/asset-inspector'
+import {
+  InspectOverlay,
+  InspectMatch,
+  InspectStats,
+} from '@/components/inspect-overlay'
 import {
   GameRegistry,
   GameScreen,
@@ -22,18 +28,7 @@ import {
   downloadJson,
 } from '@/lib/asset-types'
 import { normalizeRegistry } from '@/lib/registry'
-
-const KEY_CODES: Record<string, number> = {
-  Enter: 13,
-  Escape: 27,
-  Space: 32,
-  ArrowUp: 38,
-  ArrowDown: 40,
-  ArrowLeft: 37,
-  ArrowRight: 39,
-}
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+import { captureGameCanvas } from '@/lib/capture'
 
 export default function Home() {
   const [games, setGames] = useState<GamesIndex['games']>([])
@@ -45,14 +40,19 @@ export default function Home() {
   const [showSidebar, setShowSidebar] = useState(true)
   const [showInspector, setShowInspector] = useState(true)
   const [loaded, setLoaded] = useState(false)
-  const [navScreen, setNavScreen] = useState<string | null>(null)
-  const [navLabel, setNavLabel] = useState<string | null>(null)
-  const [navUrl, setNavUrl] = useState<string | null>(null)
   const [reloadToken, setReloadToken] = useState(0)
+
+  // stato della modalità ispezione (schermata fissa stile DevTools)
+  const [inspectOpen, setInspectOpen] = useState(false)
+  const [inspectSnapshot, setInspectSnapshot] = useState<string | null>(null)
+  const [inspectMatches, setInspectMatches] = useState<InspectMatch[]>([])
+  const [inspectStats, setInspectStats] = useState<InspectStats | null>(null)
+  const [inspectBusy, setInspectBusy] = useState(false)
+  const [inspectBusyLabel, setInspectBusyLabel] = useState('Catturo la schermata…')
+  const [inspectError, setInspectError] = useState<string | null>(null)
 
   const stageRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
-  const navTokenRef = useRef(0)
 
   // Indice giochi generico: nuovi giochi appaiono aggiungendo una cartella
   useEffect(() => {
@@ -73,6 +73,11 @@ export default function Home() {
     setScreens([])
     setReskin({})
     setSelected(null)
+    setInspectOpen(false)
+    setInspectSnapshot(null)
+    setInspectMatches([])
+    setInspectStats(null)
+    setInspectError(null)
     const safeJson = async <T,>(url: string, fallback: T): Promise<T> => {
       try {
         const r = await fetch(url)
@@ -95,9 +100,18 @@ export default function Home() {
   }, [games, activeId])
 
   const normalized = useMemo(
-    () => (registry ? normalizeRegistry(registry, screens) : null),
-    [registry, screens],
+    () => (registry ? normalizeRegistry(registry) : null),
+    [registry],
   )
+
+  // mappa id → asset per collegare i match dell'ispezione alla sidebar
+  const assetById = useMemo(() => {
+    const m = new Map<string, RegistryAsset>()
+    for (const s of normalized?.sections ?? []) {
+      for (const a of s.items) m.set(a.id, a)
+    }
+    return m
+  }, [normalized])
 
   // readyState polling: l'evento load può scattare prima dell'idratazione.
   // Il documento conta solo se è quello del gioco (non about:blank né il
@@ -133,10 +147,6 @@ export default function Home() {
   const activeGame = games.find((g) => g.id === activeId) ?? null
 
   const resetTransient = useCallback(() => {
-    navTokenRef.current += 1
-    setNavScreen(null)
-    setNavLabel(null)
-    setNavUrl(null)
     setSelected(null)
     setLoaded(false)
     setReloadToken((t) => t + 1)
@@ -167,172 +177,6 @@ export default function Home() {
     else void el.requestFullscreen()
   }, [])
 
-  // Invia un tasto all'iframe: KeyboardEvent DOM standard. Nessuna patch nei
-  // file del gioco: è automazione esterna. Dettagli che contano:
-  //  - si spedisce sul CANVAS (un solo evento che bubble a window/document:
-  //    dispatch multipli creano chiavi doppie);
-  //  - l'iframe deve avere il FOCUS: Flixel (FlxGame.focusLost) scarta gli
-  //    input quando non ce l'ha, quindi il chiamante attende dopo il focus;
-  //  - il KEYUP è ritardato di 250ms: keydown+keyup nello stesso frame fanno
-  //    perdere il "justPressed" a FlxG/GameMaker.
-  const dispatchKeyToGame = useCallback((key: string) => {
-    const frame = iframeRef.current
-    if (!frame?.contentWindow) return
-    const w = frame.contentWindow
-    const keyCode = KEY_CODES[key] ?? 0
-    try {
-      w.focus()
-    } catch {
-      /* ignora */
-    }
-    const make = (type: string) => {
-      const ev = new w.KeyboardEvent(type, {
-        key,
-        code: key,
-        bubbles: true,
-        cancelable: true,
-      })
-      Object.defineProperty(ev, 'keyCode', { get: () => keyCode })
-      Object.defineProperty(ev, 'which', { get: () => keyCode })
-      return ev
-    }
-    try {
-      const canvas =
-        w.document.querySelector('#canvas') ?? w.document.querySelector('canvas')
-      const target: Element | Window = canvas ?? w
-      target.dispatchEvent(make('keydown'))
-      window.setTimeout(() => {
-        try {
-          target.dispatchEvent(make('keyup'))
-        } catch {
-          /* ignora */
-        }
-      }, 250)
-    } catch {
-      /* gioco non pronto */
-    }
-  }, [])
-
-  // Navigazione automatica alle schermate: ricarica il gioco dalla sua
-  // origine originale, attende il boot reale e riproduce la sequenza di
-  // tasti configurata (tutti i tempi sono espliciti, nessuna inferenza).
-  const goToScreen = useCallback(
-    async (screenId: string) => {
-      if (!activeGame) return
-      const screen = screens.find((s) => s.id === screenId)
-      if (!screen || screen.manualOnly) return
-      const token = ++navTokenRef.current
-      setNavScreen(screenId)
-      setNavLabel('Ricarico il gioco…')
-      setSelected(null)
-      setNavUrl(`${activeGame.src}?nav=${Date.now()}`)
-      setReloadToken((t) => t + 1)
-
-      const navMark = `nav=`
-      const gameWin = () => iframeRef.current?.contentWindow ?? null
-      const aborted = () => token !== navTokenRef.current
-
-      // 1. nuovo documento del gioco caricato
-      let docOk = false
-      for (let i = 0; i < 200; i++) {
-        await sleep(200)
-        if (aborted()) return
-        try {
-          const w = gameWin()
-          if (
-            w?.location?.href?.includes(navMark) &&
-            w.document.readyState === 'complete'
-          ) {
-            docOk = true
-            break
-          }
-        } catch {
-          /* navigazione in corso */
-        }
-      }
-      if (!docOk && aborted()) return
-      setNavLabel('Attendo il caricamento completo del gioco…')
-
-      // 2. boot reale del gioco. Canvas 2D (GameMaker): verifica passiva dai
-      //    pixel (same-origin, nessuna modifica al gioco). Canvas WebGL
-      //    (HaxeFlixel/OpenFL, illeggibile): attesa fissa configurata.
-      const bootMs = activeGame.bootDelayMs ?? 10000
-      let waited = 2500
-      await sleep(waited)
-      if (aborted()) return
-      const minWait = Math.min(bootMs - 1000, 8000)
-      await sleep(minWait)
-      waited += minWait
-      if (aborted()) return
-      let alive = false
-      const probeDeadline = Date.now() + 9000
-      while (Date.now() < probeDeadline && !alive) {
-        try {
-          const w = gameWin()
-          const c = w?.document.querySelector('canvas')
-          const ctx2d = c?.getContext('2d') ?? null
-          if (c && ctx2d) {
-            const probe = w.document.createElement('canvas')
-            probe.width = 32
-            probe.height = 18
-            const p = probe.getContext('2d')
-            p.drawImage(c, 0, 0, 32, 18)
-            const d = p.getImageData(0, 0, 32, 18).data
-            let sum = 0
-            for (let i = 0; i < d.length; i += 4) sum += d[i] + d[i + 1] + d[i + 2]
-            if (sum > 0) alive = true
-          }
-        } catch {
-          /* campionamento non possibile */
-        }
-        if (!alive) {
-          await sleep(600)
-          waited += 600
-          if (aborted()) return
-        }
-      }
-      if (!alive) {
-        // canvas WebGL o non leggibile: completa l'attesa configurata
-        const rest = Math.max(0, bootMs - waited)
-        await sleep(rest)
-        waited += rest
-        if (aborted()) return
-      }
-      await sleep(1200)
-      waited += 1200
-      if (aborted()) return
-
-      // 3. sequenza tasti della schermata (configurazione esplicita)
-      const steps = screen.steps ?? []
-      for (let i = 0; i < steps.length; i++) {
-        const st = steps[i]
-        setNavLabel(
-          `Passo ${i + 1}/${steps.length}: ${st.k} tra ${Math.round(st.delay / 1000)}s`,
-        )
-        await sleep(st.delay)
-        if (aborted()) return
-        setNavLabel(`Passo ${i + 1}/${steps.length}: invio ${st.k}`)
-        // focus + assestamento: Flixel scarta gli input se l'iframe non è
-        // focalizzato, e l'evento di focus richiede un frame per valere
-        try {
-          gameWin()?.focus()
-        } catch {
-          /* ignora */
-        }
-        await sleep(450)
-        if (aborted()) return
-        dispatchKeyToGame(st.k)
-        await sleep(600)
-        if (aborted()) return
-      }
-      setNavLabel(null)
-      window.setTimeout(() => {
-        if (navTokenRef.current === token) setNavScreen(null)
-      }, 1200)
-    },
-    [activeGame, screens, dispatchKeyToGame],
-  )
-
   const refreshReskin = useCallback(() => {
     if (!activeGame) return
     fetch('/api/reskin?game=' + activeGame.id)
@@ -346,6 +190,74 @@ export default function Home() {
     setShowInspector(true)
   }, [])
 
+  // Modalità ispezione: fissa la schermata (snapshot canvas) e misura gli
+  // elementi visibili per confronto pixel esatto con il registro originale.
+  const runInspect = useCallback(
+    async (opts?: { targetId?: string; only?: string[] }) => {
+      if (!activeGame) return
+      setInspectOpen(true)
+      setInspectBusy(true)
+      setInspectError(null)
+      setInspectBusyLabel(
+        opts?.targetId ? 'Cerco l’elemento sulla schermata fissa…' : 'Catturo la schermata…',
+      )
+      const shot = await captureGameCanvas(iframeRef.current)
+      if (!shot) {
+        setInspectBusy(false)
+        setInspectError(
+          'Non riesco a leggere il canvas del gioco. Avvia il gioco, poi premi «Aggiorna schermata».',
+        )
+        return
+      }
+      setInspectSnapshot(shot)
+      setInspectBusyLabel('Cerco gli elementi (confronto pixel esatto)…')
+      try {
+        const r = await fetch('/api/inspect', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            game: activeGame.id,
+            image: shot,
+            only: opts?.only,
+          }),
+        })
+        const d = (await r.json()) as {
+          matches?: InspectMatch[]
+          stats?: InspectStats
+          error?: string
+        }
+        if (!r.ok) throw new Error(d.error ?? 'errore di misura')
+        setInspectMatches(d.matches ?? [])
+        setInspectStats(d.stats ?? null)
+        if ((d.matches ?? []).length === 0 && opts?.targetId) {
+          setInspectError(
+            'Questo elemento non è presente sulla schermata attuale (il confronto cerca copie pixel 1:1: sprite scalati o ruotati non vengono misurati).',
+          )
+        }
+      } catch (e) {
+        setInspectError(e instanceof Error ? e.message : 'errore di misura')
+      } finally {
+        setInspectBusy(false)
+      }
+    },
+    [activeGame],
+  )
+
+  const onSelectMatch = useCallback(
+    (m: InspectMatch) => {
+      const a = assetById.get(m.id)
+      if (a) {
+        setSelected(a)
+        setShowInspector(true)
+      }
+    },
+    [assetById],
+  )
+
+  const reloadGame = useCallback(() => {
+    resetTransient()
+  }, [resetTransient])
+
   const exportFiltered = useCallback(() => {
     if (!normalized || !activeGame) return
     downloadJson(`${activeGame.id}-registro.json`, {
@@ -356,8 +268,8 @@ export default function Home() {
     })
   }, [normalized, activeGame, registry, screens, reskin])
 
-  const loadingVisible = !loaded || navScreen !== null
-  const iframeSrc = navUrl ?? activeGame?.src ?? undefined
+  const loadingVisible = !loaded
+  const inspectTargetId = selected?.id ?? null
 
   return (
     <div className="flex h-[100dvh] min-h-0 flex-col bg-zinc-950 text-zinc-100">
@@ -457,30 +369,56 @@ export default function Home() {
         )}
 
         <main ref={stageRef} className="relative min-w-0 flex-1 bg-black">
-          {activeGame && iframeSrc && (
+          {activeGame && (
             <iframe
               key={`${activeId}-${reloadToken}`}
               ref={iframeRef}
-              src={iframeSrc}
+              src={activeGame.src}
               title={activeGame.name}
               className="absolute inset-0 h-full w-full border-0"
               allow="fullscreen; autoplay; gamepad"
             />
           )}
-          {loadingVisible && (
+
+          {/* pulsante cursore: entra in modalità ispezione, come in DevTools */}
+          {!inspectOpen && (
+            <button
+              onClick={() => void runInspect()}
+              disabled={inspectBusy}
+              title="Ispeziona gli elementi della schermata attuale (snapshot + confronto pixel)"
+              aria-label="Ispeziona elementi"
+              className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-lg border border-zinc-600 bg-zinc-900/85 px-3 py-2 text-xs font-bold text-zinc-200 shadow-lg transition-colors hover:border-sky-400/60 hover:text-sky-300"
+            >
+              <MousePointerClick className="h-4 w-4" aria-hidden="true" />
+              Ispeziona
+            </button>
+          )}
+
+          {inspectOpen && (
+            <InspectOverlay
+              gameId={activeGame?.id ?? ''}
+              snapshot={inspectSnapshot}
+              matches={inspectMatches}
+              stats={inspectStats}
+              busy={inspectBusy}
+              busyLabel={inspectBusyLabel}
+              error={inspectError}
+              selectedId={inspectTargetId}
+              onRefresh={() => void runInspect()}
+              onSelectMatch={onSelectMatch}
+              onClose={() => setInspectOpen(false)}
+            />
+          )}
+
+          {loadingVisible && !inspectOpen && (
             <div
               className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/90"
               aria-hidden="true"
             >
               <Loader2 className="h-10 w-10 animate-spin text-red-500" />
               <p className="max-w-xs text-center text-sm text-zinc-300">
-                {navLabel ?? `Caricamento ${activeGame?.name ?? 'gioco'}…`}
+                Caricamento {activeGame?.name ?? 'gioco'}…
               </p>
-              {navScreen && (
-                <p className="text-xs text-zinc-500">
-                  {screens.find((s) => s.id === navScreen)?.name ?? ''}
-                </p>
-              )}
             </div>
           )}
         </main>
@@ -496,10 +434,11 @@ export default function Home() {
               <AssetInspector
                 asset={selected}
                 registry={registry}
-                screens={screens}
                 reskin={reskin}
-                navigating={navScreen}
-                onGoToScreen={(id) => void goToScreen(id)}
+                onInspectAsset={() =>
+                  void runInspect({ targetId: selected.id, only: [selected.id] })
+                }
+                onReloadGame={reloadGame}
                 onReskinChanged={refreshReskin}
                 onClose={() => {
                   setShowInspector(false)
@@ -518,8 +457,7 @@ export default function Home() {
         </span>
         {normalized && (
           <span className="hidden shrink-0 sm:inline">
-            {normalized.totalItems} elementi registro · {screens.length}{' '}
-            schermate · file originali
+            {normalized.totalItems} elementi registro · file originali
           </span>
         )}
       </div>
