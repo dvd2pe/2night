@@ -1,0 +1,9 @@
+# Protects the entire application, including all write-enabled /api/reskin endpoints.
+# APP_DOMAIN should point to this VM's public IP (use a domain or IP.sslip.io).
+{$APP_DOMAIN} {
+  encode zstd gzip
+  basic_auth {
+    {$AUTH_USER} {$AUTH_HASH}
+  }
+  reverse_proxy app:3000
+}
